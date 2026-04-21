@@ -1,0 +1,35 @@
+2026-04-21 01:46:57,940 INFO BIDS root: /home/haizhe/scratch/stn/raw
+2026-04-21 01:46:57,940 INFO Output:    /home/haizhe/scratch/stn/audit
+2026-04-21 01:46:58,056 INFO Found 20 subjects
+2026-04-21 01:46:58,056 INFO -- auditing sub-0cGdk9
+2026-04-21 01:48:23,951 INFO -- auditing sub-2IU8mi
+2026-04-21 01:50:05,419 INFO -- auditing sub-2IhVOz
+2026-04-21 01:51:58,278 INFO -- auditing sub-6m9kB5
+2026-04-21 01:52:53,360 INFO -- auditing sub-8RgPiG
+2026-04-21 01:54:27,035 INFO -- auditing sub-AB2PeX
+2026-04-21 01:56:18,183 INFO -- auditing sub-AbzsOg
+2026-04-21 01:58:49,671 INFO -- auditing sub-BYJoWR
+2026-04-21 02:00:21,141 INFO -- auditing sub-FIyfdR
+2026-04-21 02:02:05,447 INFO -- auditing sub-FYbcap
+2026-04-21 02:03:38,718 INFO -- auditing sub-PuPVlx
+2026-04-21 02:05:49,642 INFO -- auditing sub-QZTsn6
+2026-04-21 02:07:22,244 INFO -- auditing sub-VopvKx
+2026-04-21 02:09:00,323 INFO -- auditing sub-dCsWjQ
+2026-04-21 02:10:49,422 INFO -- auditing sub-gNX5yb
+2026-04-21 02:12:47,410 INFO -- auditing sub-hnetKS
+2026-04-21 02:14:21,957 INFO -- auditing sub-i4oK0F
+2026-04-21 02:15:57,897 INFO -- auditing sub-iDpl28
+2026-04-21 02:18:12,516 INFO -- auditing sub-jyC0j3
+2026-04-21 02:19:50,810 INFO -- auditing sub-oLNpHd
+2026-04-21 02:22:21,234 INFO Wrote /home/haizhe/scratch/stn/audit/runs_detail.tsv (145 rows)
+2026-04-21 02:22:21,240 INFO Wrote /home/haizhe/scratch/stn/audit/cohort_summary.tsv (20 subjects)
+2026-04-21 02:22:21,245 INFO Excluded subjects: 20 / 20
+2026-04-21 02:22:21,245 INFO Wrote /home/haizhe/scratch/stn/audit/exclusion_log.tsv
+2026-04-21 02:22:21,245 INFO ============================================================
+2026-04-21 02:22:21,245 INFO AUDIT SUMMARY
+2026-04-21 02:22:21,245 INFO ============================================================
+2026-04-21 02:22:21,245 INFO   Total subjects    : 20
+2026-04-21 02:22:21,245 INFO   Included          : 0
+2026-04-21 02:22:21,246 INFO   Excluded          : 20
+2026-04-21 02:22:21,246 INFO   Rest-only subjects: 2
+2026-04-21 02:22:21,246 INFO   Total duration MedOff: 567.4 min

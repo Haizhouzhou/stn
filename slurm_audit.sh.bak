@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --job-name=stn-audit
+#SBATCH --output=%x_%j.out
+#SBATCH --error=%x_%j.err
+#SBATCH --time=00:30:00
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8G
+#SBATCH --partition=short
+
+# Audit runs only file-headers + TSVs; it's cheap. 30 min + 8 GB is generous.
+# Adjust --partition for your cluster.
+
+set -euo pipefail
+
+# Load your Python environment here. Adjust to your cluster.
+# Example A: conda
+# module load miniconda
+# source activate stn-snn
+
+# Example B: module-loaded Python + venv
+# module load python/3.11
+# source ~/scratch/stn/venv/bin/activate
+
+BIDS_ROOT="$HOME/scratch/stn/raw"
+OUT_DIR="$HOME/scratch/stn/audit"
+
+echo "BIDS_ROOT = $BIDS_ROOT"
+echo "OUT_DIR   = $OUT_DIR"
+
+python 01_audit_cohort.py \
+    --bids-root "$BIDS_ROOT" \
+    --out "$OUT_DIR"
+
+echo "Audit complete."
+echo "Key files:"
+ls -lh "$OUT_DIR"/*.tsv

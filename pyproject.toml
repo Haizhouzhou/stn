@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stnbeta"
+version = "0.1.0"
+description = "STN beta-burst detection and DYNAP-SE1 encoding"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "pandas",
+    "mne>=1.0",
+    "joblib",
+    "psutil",
+]
+
+[project.optional-dependencies]
+bursts = ["fooof"]
+snn    = ["torch", "rockpool"]
+dev    = ["pytest", "pytest-cov", "ruff"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

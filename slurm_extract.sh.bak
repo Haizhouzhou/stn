@@ -1,0 +1,54 @@
+#!/bin/bash
+#SBATCH --job-name=stn-extract
+#SBATCH --output=logs/%x_%A_%a.out
+#SBATCH --error=logs/%x_%A_%a.err
+#SBATCH --time=02:00:00
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --array=0-19          # 20 subjects; adjust if your cohort is smaller
+
+# Extraction is per-run MEG load + resample, which IS memory-heavy.
+# Each raw .fif can be ~1.5 GB; preloading needs ~2x for float64.
+# 16 GB / 4 CPU is comfortable. 2h/subject is generous.
+
+set -euo pipefail
+mkdir -p logs
+
+# Load env as in slurm_audit.sh
+# module load miniconda && source activate stn-snn
+
+BIDS_ROOT="$HOME/scratch/stn/raw"
+OUT_DIR="$HOME/scratch/stn/extracted"
+COHORT_TSV="$HOME/scratch/stn/audit/cohort_summary.tsv"
+
+# Build the subject list from cohort_summary.tsv, included subjects only.
+# If cohort_summary.tsv is missing, fall back to every sub-* directory.
+if [[ -f "$COHORT_TSV" ]]; then
+    # Pick column 'subject_id' where 'include' == True
+    mapfile -t SUBJECTS < <(awk -F'\t' 'NR==1 {for (i=1;i<=NF;i++){h[$i]=i}; next}
+                                       $h["include"]=="True" {print $h["subject_id"]}' \
+                            "$COHORT_TSV")
+else
+    mapfile -t SUBJECTS < <(ls -d "$BIDS_ROOT"/sub-* | xargs -n1 basename)
+fi
+
+N="${#SUBJECTS[@]}"
+echo "Total subjects to process: $N"
+
+IDX="${SLURM_ARRAY_TASK_ID:-0}"
+if (( IDX >= N )); then
+    echo "Array index $IDX out of range (N=$N); nothing to do."
+    exit 0
+fi
+
+SUBJ="${SUBJECTS[$IDX]}"
+echo "Processing subject: $SUBJ"
+
+python 02_extract_lfp.py \
+    --bids-root "$BIDS_ROOT" \
+    --cohort-summary "$COHORT_TSV" \
+    --out "$OUT_DIR" \
+    --resample-hz 1000 \
+    --subject "$SUBJ"
+
+echo "Done: $SUBJ"

@@ -1,0 +1,320 @@
+"""
+Cohort audit for ds004998 (RestHoldMove).
+
+Walks the BIDS tree, reads only metadata (no signal preloading), and produces:
+  - cohort_summary.tsv       - one row per subject, inclusion flags
+  - runs_detail.tsv          - one row per (subject, task, run) triple
+  - per_subject/*.json       - detailed per-subject dump
+  - audit_log.txt            - warnings, errors
+
+Runtime: ~5-15 minutes on HPC login node (no data loading). Safe to run on login.
+
+Importable API:
+    from stnbeta.io.bids_loader import audit_subject, audit_one_fif, main
+"""
+
+from __future__ import annotations
+import argparse
+import json
+import logging
+import sys
+from pathlib import Path
+from typing import Any
+
+import pandas as pd
+
+
+def _lazy_mne():
+    import mne
+    mne.set_log_level("ERROR")
+    return mne
+
+
+# --------------------------------------------------------------------------
+# Inclusion criteria (update to match your master plan)
+# --------------------------------------------------------------------------
+MIN_MEDOFF_DURATION_S = 180    # at least 3 minutes of MedOff data
+MIN_LFP_CHANNELS = 6           # tolerate 2 bad contacts
+MAX_BAD_FRACTION = 0.30        # fraction of file marked as bad epochs
+
+
+def parse_bids_entities(fif_name: str) -> dict:
+    """Extract BIDS entities from a filename. Defensive — returns {} on failure."""
+    out = {}
+    for token in fif_name.replace(".fif", "").split("_"):
+        if "-" in token:
+            k, v = token.split("-", 1)
+            out[k] = v
+    return out
+
+
+def load_tsv(path: Path) -> pd.DataFrame | None:
+    if not path.exists():
+        return None
+    try:
+        return pd.read_csv(path, sep="\t")
+    except Exception as e:
+        logging.warning(f"Could not read {path}: {e}")
+        return None
+
+
+def audit_one_fif(fif_path: Path) -> dict[str, Any]:
+    """Audit a single fif file. Returns a dict row for runs_detail.tsv."""
+    mne = _lazy_mne()
+    row: dict[str, Any] = {"fif_path": str(fif_path)}
+    entities = parse_bids_entities(fif_path.name)
+    row.update({f"bids_{k}": v for k, v in entities.items()})
+
+    if entities.get("task", "").lower() == "noise":
+        row["skip_reason"] = "empty_room_noise"
+        return row
+
+    if entities.get("split", "01") != "01":
+        row["skip_reason"] = "non_primary_split"
+        return row
+
+    try:
+        raw = mne.io.read_raw_fif(fif_path, preload=False, allow_maxshield=True, verbose=False)
+    except Exception as e:
+        row["read_error"] = str(e)
+        return row
+
+    info = raw.info
+    row["sfreq_hz"] = float(info["sfreq"])
+    row["duration_s"] = float(raw.times[-1])
+    row["n_channels_total"] = len(raw.ch_names)
+
+    types = raw.get_channel_types()
+    row["n_meg_mag"] = sum(t == "mag" for t in types)
+    row["n_meg_grad"] = sum(t == "grad" for t in types)
+    row["n_eeg_as_lfp"] = sum(t == "eeg" for t in types)
+    row["n_emg"] = sum(t == "emg" for t in types)
+    row["n_eog"] = sum(t == "eog" for t in types)
+    row["n_stim"] = sum(t == "stim" for t in types)
+
+    base = fif_path.name.replace("_meg.fif", "")
+    channels_tsv = fif_path.parent / f"{base}_channels.tsv"
+    ch_df = load_tsv(channels_tsv)
+    if ch_df is not None and "status" in ch_df.columns:
+        bad_names = ch_df.loc[ch_df["status"] == "bad", "name"].tolist()
+        row["bad_channels_tsv"] = ";".join(bad_names)
+        row["n_bad_channels"] = len(bad_names)
+        row["n_bad_lfp"] = sum(
+            ch_df[(ch_df["status"] == "bad") & (ch_df["type"] == "EEG")].shape[0]
+            if "type" in ch_df.columns else 0
+            for _ in [0]
+        )
+    else:
+        row["bad_channels_tsv"] = ""
+        row["n_bad_channels"] = 0
+        row["n_bad_lfp"] = 0
+
+    events_tsv = fif_path.parent / f"{base}_events.tsv"
+    ev_df = load_tsv(events_tsv)
+    if ev_df is not None:
+        row["n_events"] = len(ev_df)
+        if "trial_type" in ev_df.columns:
+            bad_mask = ev_df["trial_type"].astype(str).str.startswith("BAD")
+            bad_total = ev_df.loc[bad_mask, "duration"].sum() if bad_mask.any() else 0.0
+            row["bad_segments_s"] = float(bad_total)
+            row["bad_fraction"] = float(bad_total / max(row["duration_s"], 1e-6))
+        else:
+            row["bad_segments_s"] = 0.0
+            row["bad_fraction"] = 0.0
+    else:
+        row["n_events"] = 0
+        row["bad_segments_s"] = 0.0
+        row["bad_fraction"] = 0.0
+
+    return row
+
+
+def audit_subject(subject_dir: Path) -> tuple[list[dict], dict]:
+    """Audit all fif files for a subject. Returns (per-run rows, subject summary)."""
+    subject_id = subject_dir.name
+
+    rows: list[dict] = []
+    for fif_path in sorted(subject_dir.rglob("*_meg.fif")):
+        row = audit_one_fif(fif_path)
+        row["subject_id"] = subject_id
+        rows.append(row)
+
+    montage_files = list(subject_dir.rglob("*_montage.tsv"))
+    lfp_left, lfp_right = 0, 0
+    if montage_files:
+        mdf = load_tsv(montage_files[0])
+        if mdf is not None and len(mdf):
+
+            def _count_unique_nonempty(col: pd.Series) -> int:
+                s = col.dropna().astype(str).str.strip()
+                s = s[s != ""]
+                return int(s.str.lower().nunique())
+
+            if "left_contacts_new" in mdf.columns:
+                lfp_left = _count_unique_nonempty(mdf["left_contacts_new"])
+            elif "left_contacts_old" in mdf.columns:
+                lfp_left = _count_unique_nonempty(mdf["left_contacts_old"])
+
+            if "right_contacts_new" in mdf.columns:
+                lfp_right = _count_unique_nonempty(mdf["right_contacts_new"])
+            elif "right_contacts_old" in mdf.columns:
+                lfp_right = _count_unique_nonempty(mdf["right_contacts_old"])
+
+            if lfp_left == 0 and lfp_right == 0:
+                name_col = None
+                for cand in ["new_name", "bids_name", "contact_name", "label", "name"]:
+                    if cand in mdf.columns:
+                        name_col = cand
+                        break
+                if name_col is not None:
+                    labels = (
+                        mdf[name_col]
+                        .dropna()
+                        .astype(str)
+                        .str.strip()
+                        .str.lower()
+                    )
+                    labels = labels[labels != ""]
+                    lfp_left = int(labels[labels.str.contains("left")].nunique())
+                    lfp_right = int(labels[labels.str.contains("right")].nunique())
+
+    valid = [r for r in rows if "skip_reason" not in r and "read_error" not in r]
+    summary = {
+        "subject_id": subject_id,
+        "n_fif_total": len(rows),
+        "n_fif_valid": len(valid),
+        "n_fif_noise": sum(r.get("skip_reason") == "empty_room_noise" for r in rows),
+        "n_fif_split_extra": sum(r.get("skip_reason") == "non_primary_split" for r in rows),
+        "n_fif_error": sum("read_error" in r for r in rows),
+        "lfp_contacts_left": lfp_left,
+        "lfp_contacts_right": lfp_right,
+    }
+
+    def collect(task_prefix: str, acq: str) -> dict:
+        sub = [r for r in valid if r.get("bids_task", "").lower().startswith(task_prefix.lower())
+               and r.get("bids_acq", "") == acq]
+        return {
+            "has": len(sub) > 0,
+            "total_s": float(sum(r.get("duration_s", 0) for r in sub)),
+            "bad_fraction_max": float(max((r.get("bad_fraction", 0) for r in sub), default=0.0)),
+        }
+
+    for (task, acq) in [
+        ("Rest", "MedOff"), ("Rest", "MedOn"),
+        ("Hold", "MedOff"), ("Hold", "MedOn"),
+        ("Move", "MedOff"), ("Move", "MedOn"),
+    ]:
+        key = f"{task.lower()}_{acq.lower()}"
+        d = collect(task, acq)
+        summary[f"has_{key}"] = d["has"]
+        summary[f"duration_{key}_s"] = d["total_s"]
+        summary[f"badfrac_{key}_max"] = d["bad_fraction_max"]
+
+    sfreqs = [r.get("sfreq_hz") for r in valid if r.get("sfreq_hz") is not None]
+    summary["sfreq_hz"] = sfreqs[0] if sfreqs else None
+    summary["sfreq_inconsistent"] = len(set(sfreqs)) > 1 if sfreqs else False
+
+    medoff_duration = (summary.get("duration_rest_medoff_s", 0)
+                       + summary.get("duration_hold_medoff_s", 0)
+                       + summary.get("duration_move_medoff_s", 0))
+    lfp_available = lfp_left + lfp_right >= MIN_LFP_CHANNELS
+    badfrac_ok = all(summary.get(f"badfrac_{k}_max", 0) < MAX_BAD_FRACTION
+                     for k in ["rest_medoff", "hold_medoff", "move_medoff"])
+
+    reasons = []
+    if medoff_duration < MIN_MEDOFF_DURATION_S:
+        reasons.append(f"medoff_duration<{MIN_MEDOFF_DURATION_S}s")
+    if not lfp_available:
+        reasons.append(f"lfp_contacts<{MIN_LFP_CHANNELS}")
+    if not badfrac_ok:
+        reasons.append(f"badfrac>{MAX_BAD_FRACTION}")
+    if summary.get("sfreq_inconsistent"):
+        reasons.append("sfreq_inconsistent")
+
+    summary["include"] = len(reasons) == 0
+    summary["exclusion_reasons"] = ";".join(reasons)
+
+    return rows, summary
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--bids-root", type=Path, required=True)
+    ap.add_argument("--out", type=Path, required=True)
+    args = ap.parse_args()
+
+    args.out.mkdir(parents=True, exist_ok=True)
+    (args.out / "per_subject").mkdir(exist_ok=True)
+
+    log_path = args.out / "audit_log.txt"
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        handlers=[logging.FileHandler(log_path), logging.StreamHandler(sys.stdout)],
+    )
+
+    logging.info(f"BIDS root: {args.bids_root}")
+    logging.info(f"Output:    {args.out}")
+
+    participants_df = load_tsv(args.bids_root / "participants.tsv")
+    updrs_off_df = load_tsv(args.bids_root / "participants_updrs_off.tsv")
+    updrs_on_df = load_tsv(args.bids_root / "participants_updrs_on.tsv")
+
+    subject_dirs = sorted(p for p in args.bids_root.glob("sub-*") if p.is_dir())
+    logging.info(f"Found {len(subject_dirs)} subjects")
+
+    all_runs: list[dict] = []
+    subject_summaries: list[dict] = []
+
+    for sd in subject_dirs:
+        logging.info(f"-- auditing {sd.name}")
+        try:
+            rows, summary = audit_subject(sd)
+        except Exception as e:
+            logging.error(f"Subject {sd.name} audit failed: {e}")
+            subject_summaries.append({"subject_id": sd.name, "include": False,
+                                      "exclusion_reasons": f"audit_crashed:{e}"})
+            continue
+
+        all_runs.extend(rows)
+
+        if updrs_off_df is not None and "participant_id" in updrs_off_df.columns:
+            match = updrs_off_df.loc[updrs_off_df["participant_id"] == sd.name]
+            if len(match):
+                numeric = match.select_dtypes(include="number")
+                summary["updrs_off_total"] = float(numeric.sum(axis=1).iloc[0]) if numeric.shape[1] else None
+
+        if updrs_on_df is not None and "participant_id" in updrs_on_df.columns:
+            match = updrs_on_df.loc[updrs_on_df["participant_id"] == sd.name]
+            if len(match):
+                numeric = match.select_dtypes(include="number")
+                summary["updrs_on_total"] = float(numeric.sum(axis=1).iloc[0]) if numeric.shape[1] else None
+
+        subject_summaries.append(summary)
+
+        with open(args.out / "per_subject" / f"{sd.name}.json", "w") as f:
+            json.dump({"summary": summary, "runs": rows}, f, indent=2, default=str)
+
+    runs_df = pd.DataFrame(all_runs)
+    runs_df.to_csv(args.out / "runs_detail.tsv", sep="\t", index=False)
+    logging.info(f"Wrote {args.out/'runs_detail.tsv'} ({len(runs_df)} rows)")
+
+    cohort_df = pd.DataFrame(subject_summaries)
+    cohort_df.to_csv(args.out / "cohort_summary.tsv", sep="\t", index=False)
+    logging.info(f"Wrote {args.out/'cohort_summary.tsv'} ({len(cohort_df)} subjects)")
+
+    excl = cohort_df.loc[~cohort_df["include"], ["subject_id", "exclusion_reasons"]]
+    excl.to_csv(args.out / "exclusion_log.tsv", sep="\t", index=False)
+    logging.info(f"Excluded subjects: {len(excl)} / {len(cohort_df)}")
+
+    logging.info("=" * 60)
+    logging.info("AUDIT SUMMARY")
+    logging.info("=" * 60)
+    logging.info(f"  Total subjects    : {len(cohort_df)}")
+    logging.info(f"  Included          : {int(cohort_df['include'].sum())}")
+    logging.info(f"  Excluded          : {int((~cohort_df['include']).sum())}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
