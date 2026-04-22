@@ -11,7 +11,7 @@
 
 set -euo pipefail
 mkdir -p logs
-source activate SSN
+source /home/haizhe/conda/envs/SSN/bin/activate
 cd "$HOME/scratch/stn"
 
 python scripts/06_attach_annotations.py \
