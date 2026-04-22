@@ -677,7 +677,7 @@ def main() -> int:
     write_literature_comparison(df, table_dir)
 
     # Back up pre-existing literature_comparison if it predates contact selection
-    _write_adrs(table_dir.parent.parent / "docs" / "decisions.md")
+    _write_adrs(Path(__file__).resolve().parent.parent / "docs" / "decisions.md")
 
     if not all_pass:
         logger.error("One or more sanity checks FAILED — do not proceed to Gate 1")

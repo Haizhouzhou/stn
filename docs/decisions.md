@@ -174,3 +174,69 @@ computed over entire files including non-rest epochs and BAD_LFP segments; (2) b
 labeling ran on unmasked signals, producing multi-minute "bursts" for sub-dCsWjQ,
 sub-i4oK0F, and sub-oLNpHd; (3) CHECK 3 (UPDRS correlation) failed with r = −0.35
 due to corrupted MedOn statistics and incorrect MedOff threshold baselines.
+
+---
+
+## ADR-015: Functional contact selection via FOOOF beta peak
+**Date:** 2026-04-22
+**Decision:** Each bipolar channel must exhibit a detectable beta peak (13–35 Hz) at least
+3 dB above the 1/f aperiodic background on MedOff Rest before being included in burst
+analysis. Fit performed with specparam/FOOOF (peak_width_limits=(2,12), max_n_peaks=6,
+fixed aperiodic), Welch PSD (4-second windows, 50% overlap), frequency range 2–45 Hz.
+Minimum rest data: 60 s. The `is_beta_active_channel` column is written to every row of
+`cohort_burst_stats.tsv`; all aggregate statistics filter to True rows only.
+**Rationale:** Rassoulou 2024 (Sci Data) usage notes recommend functional criteria because
+anatomical contact positions within STN are not provided in the dataset. The functional
+approach (Tinkhauser 2017, Neumann 2016, Lofredi 2019) ensures only physiologically
+relevant channels contribute to burst statistics, reducing noise from non-STN contacts.
+Threshold = 3 dB peak height above aperiodic 1/f baseline, 13–35 Hz, MedOff Rest.
+Full cohort result (job 2505732): 77/136 channels (57%) beta-active across 18/20 subjects.
+
+---
+
+## ADR-016: Contralateral UPDRS subscore as CHECK 3b primary metric
+**Date:** 2026-04-22
+**Decision:** CHECK 3b (primary gate) uses the per-hemisphere contralateral UPDRS-III
+subscore (AR_contralateral + rest-tremor-amplitude 3.17 UE+LE for the contralateral body
+side). CHECK 3a (secondary) retains the total UPDRS-III for literature comparability.
+Contralateral items per MDS-UPDRS Part III: rigidity (3.3, lateralized), finger tapping
+(3.4), hand movements (3.5), pronation-supination (3.6), toe tapping (3.7), leg agility
+(3.8), rest tremor amplitude (3.17 UE+LE only). Jaw tremor (3.17e) and all axial items
+excluded. Column mapping verified: "AR right/left" in participants_updrs_off.tsv equals
+3.3b/d + 3.4–3.8 for right/left body (cross-checked against individual item sums for
+multiple subjects). Sub-iDpl28 is excluded from CHECK 3b: 3_17_c/d (LE rest tremor)
+are NaN in the source file; contralateral score is set to None per conservative policy.
+**Rationale:** Left STN pathology drives right-body symptoms and vice versa (standard
+lateralization in DBS literature). Using total UPDRS-III averages across hemispheres
+weakens the signal by including symptoms driven by the contralateral (unrecorded) electrode.
+Gate 1 passes if CHECK 1 + CHECK 2 + (CHECK 3a or CHECK 3b) pass at p < 0.1 one-sided.
+
+---
+
+## ADR-017: Long MedOff Rest bursts retained — no max-duration filter
+**Date:** 2026-04-22
+**Decision:** No maximum burst duration filter is applied. The ~3.7 s burst observed in
+sub-6m9kB5 LFP-left-34 (MedOff Rest) is verified non-artifactual: no BAD_LFP annotation
+overlaps this epoch (confirmed by get_epoch_mask output). Tonic beta elevations during
+prolonged MedOff Rest are documented as a disease feature (Lofredi 2019, J Neurosci).
+**Rationale:** Introducing an ad hoc max-duration filter to exclude this burst would require
+physiological justification absent from the cited literature. The burst is retained as a
+valid long-duration event. The long_burst_fraction metric is designed to detect exactly
+this phenotype; excluding it would bias the CHECK 3 correlation downward.
+
+---
+
+## ADR-018: Gate 1 CHECK 3a/3b both negative — accepted as honest small-N finding
+**Date:** 2026-04-22
+**Decision:** CHECK 3a: r = −0.389, p(one-sided) = 0.055, N=18 subjects.
+CHECK 3b: r = −0.266, p(one-sided) = 0.082, N=29 hemisphere-subject pairs.
+Both correlations are in the wrong direction (longer bursts → lower UPDRS). Gate 1 does
+not pass on CHECK 3. This result is accepted as reported; thresholds were not re-tuned.
+**Rationale:** The spec (Fix 6 ground rules) explicitly states: "If CHECK 3a and CHECK 3b
+both fail, we accept it as an honest small-N cohort finding — document and move on, do
+not re-tune." CHECK 1 (medication effect) and CHECK 2 (duration range) both pass
+strongly. The negative UPDRS correlation may reflect cohort heterogeneity, ceiling
+effects in functional contact selection (2 subjects with 0 active channels excluded from
+CHECK 3 via filtering), or genuine absence of a detectable LBF–symptom relationship
+at N=18–20. No further tuning of contact selection thresholds, band limits, or LBF
+definitions is warranted under the pre-registered analysis plan.
