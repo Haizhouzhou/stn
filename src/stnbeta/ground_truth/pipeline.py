@@ -30,6 +30,7 @@ from stnbeta.ground_truth.bursts import (
     hilbert_envelope,
     label_bursts,
 )
+from stnbeta.ground_truth.contact_selection import BetaActiveResult, is_beta_active_channel
 from stnbeta.ground_truth.fooof_band import fit_individual_beta
 
 logger = logging.getLogger(__name__)
@@ -149,6 +150,57 @@ def run_subject(
 
     band_modes_to_run = (
         ["fixed_13_30", "individualized"] if band_mode == "both" else [band_mode]
+    )
+
+    # ── Step 0: contact selection — find first MedOff file with most clean rest (≥60 s preferred) ──
+    contact_results: dict[str, BetaActiveResult] = {}
+    cs_rest_s = 0.0
+    _cs_raw = _cs_mask = None
+    _cs_best_rest = 0.0
+    for fif_path in medoff_fifs:
+        _r = mne.io.read_raw_fif(fif_path, preload=True, verbose="ERROR")
+        _m = get_epoch_mask(_r, "rest")
+        _rs = float(_m.sum()) / sfreq
+        if _rs > _cs_best_rest:
+            if _cs_raw is not None:
+                del _cs_raw
+            _cs_raw, _cs_mask, _cs_best_rest = _r, _m, _rs
+        else:
+            del _r
+        if _cs_best_rest >= MIN_REST_S:
+            break  # found a file with sufficient rest
+
+    if _cs_raw is not None:
+        cs_rest_s = _cs_best_rest
+        file_picks_set = set(_bipolar_picks(_cs_raw))
+        for ch in bipolar_picks:
+            if ch in file_picks_set:
+                contact_results[ch] = is_beta_active_channel(_cs_raw, ch, _cs_mask)
+            else:
+                contact_results[ch] = BetaActiveResult(
+                    active=False,
+                    peak_freq_hz=None,
+                    peak_power_db=None,
+                    aperiodic_offset=None,
+                    aperiodic_exponent=None,
+                    reason="channel_not_in_medoff_file",
+                )
+        del _cs_raw
+    else:
+        for ch in bipolar_picks:
+            contact_results[ch] = BetaActiveResult(
+                active=False,
+                peak_freq_hz=None,
+                peak_power_db=None,
+                aperiodic_offset=None,
+                aperiodic_exponent=None,
+                reason="no_medoff_file_available",
+            )
+
+    n_total = len(bipolar_picks)
+    n_active = sum(1 for r in contact_results.values() if r["active"])
+    (logger.warning if n_active == 0 else logger.info)(
+        "%s: N_channels_total=%d, N_beta_active=%d", subject_id, n_total, n_active
     )
 
     # ── Step 1: fit individualized bands (FOOOF) from first MedOff file with ≥30 s rest ──
@@ -386,6 +438,7 @@ def run_subject(
                 "bipolar_count": len(bipolar_picks),
                 **stats,
                 "long_burst_fraction": long_frac,
+                "is_beta_active_channel": contact_results.get(ch, {}).get("active", False),
             })
 
     logger.info(
@@ -398,6 +451,8 @@ def run_subject(
         "n_bipolar": len(bipolar_picks),
         "rest_duration_s": round(total_rest_s, 1),
         "rows": summary_rows,
+        "contact_results": contact_results,
+        "cs_rest_s": round(cs_rest_s, 1),
     }
 
 

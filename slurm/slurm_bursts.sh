@@ -17,6 +17,7 @@ cd "$HOME/scratch/stn"
 python scripts/03_extract_bursts.py \
     --extracted-root "$HOME/scratch/stn/extracted" \
     --audit-tsv "$HOME/scratch/stn/audit/cohort_summary.tsv" \
+    --updrs-tsv "$HOME/scratch/stn/raw/participants_updrs_off.tsv" \
     --out "$HOME/scratch/stn/results/bursts" \
     --band-mode both \
     --jobs 10 \
