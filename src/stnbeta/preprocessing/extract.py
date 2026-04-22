@@ -151,8 +151,14 @@ def make_bipolar_pairs(lfp_names: list[str]) -> list[tuple[str, str, str]]:
     return pairs
 
 
-def _events_tsv_to_annotations(events_tsv_path: Path, meas_date=None):
+def _events_tsv_to_annotations(events_tsv_path: Path, first_time: float = 0.0, meas_date=None):
     """Build MNE Annotations from a BIDS events.tsv.
+
+    BIDS onset values are seconds from the first sample of the recording
+    (raw.first_time from meas_date).  To place annotations correctly inside
+    MNE's absolute-time frame, onset_abs = bids_onset + first_time, and
+    orig_time = meas_date.  If meas_date is None we fall back to orig_time=None
+    (works only when raw.first_time == 0, i.e. recording started at time 0).
 
     bad_* descriptions are uppercased (→ BAD_*) so MNE auto-excludes them.
     Returns None if the file is missing or empty.
@@ -167,16 +173,20 @@ def _events_tsv_to_annotations(events_tsv_path: Path, meas_date=None):
     bad_mask = desc.str.lower().str.startswith("bad")
     desc.loc[bad_mask] = desc.loc[bad_mask].str.upper()  # bad_lfp → BAD_LFP
     return mne.Annotations(
-        onset=df["onset"].to_numpy(dtype=float),
+        onset=df["onset"].to_numpy(dtype=float) + first_time,
         duration=df["duration"].to_numpy(dtype=float),
         description=desc.to_numpy(dtype=str),
-        orig_time=None,
+        orig_time=meas_date,
     )
 
 
 def attach_events_to_raw(raw, events_tsv_path: Path):
     """Attach BIDS events.tsv annotations to raw in-place. Returns raw."""
-    ann = _events_tsv_to_annotations(events_tsv_path)
+    ann = _events_tsv_to_annotations(
+        events_tsv_path,
+        first_time=float(raw.first_time),
+        meas_date=raw.info.get("meas_date"),
+    )
     if ann is not None and len(ann) > 0:
         raw.set_annotations(ann)
     return raw

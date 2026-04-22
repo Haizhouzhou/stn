@@ -1,13 +1,17 @@
-"""Unit tests for get_epoch_mask() in pipeline.py.
+"""Unit tests for get_epoch_mask() in pipeline.py and annotation attachment.
 
 These use synthetic MNE RawArray objects — no file I/O, safe on login node.
 """
+
+import tempfile
+from pathlib import Path
 
 import mne
 import numpy as np
 import pytest
 
 from stnbeta.ground_truth.pipeline import get_epoch_mask
+from stnbeta.preprocessing.extract import _events_tsv_to_annotations
 
 
 def _make_raw(duration_s: float, sfreq: float = 100.0) -> mne.io.RawArray:
@@ -90,3 +94,32 @@ def test_mask_no_annotations_returns_empty():
     assert not mask.any()
     mask2 = get_epoch_mask(raw, "HoldL")
     assert not mask2.any()
+
+
+def test_annotation_first_time_offset():
+    """_events_tsv_to_annotations must offset BIDS onsets by first_time.
+
+    When a raw recording starts at first_time=257.2 s (non-zero first_samp),
+    a BIDS onset=0.0 must be shifted to 257.2 in the Annotations so that after
+    MNE subtracts raw.first_time the recovered onset is 0.0 (start of recording).
+    """
+    import pandas as pd
+
+    first_time = 257.2
+    with tempfile.NamedTemporaryFile(suffix=".tsv", mode="w", delete=False) as f:
+        f.write("onset\tduration\ttrial_type\n")
+        f.write(f"0.0\t287.2\trest\n")
+        f.write(f"87.155\t4.4\tbad_lfp\n")
+        tsv_path = Path(f.name)
+
+    ann = _events_tsv_to_annotations(tsv_path, first_time=first_time, meas_date=None)
+    tsv_path.unlink()
+
+    assert ann is not None
+    assert len(ann) == 2
+    # Onset should be shifted: BIDS onset 0.0 + first_time 257.2 = 257.2
+    assert abs(ann.onset[0] - (0.0 + first_time)) < 1e-6
+    # bad_lfp should be uppercased
+    assert ann.description[1] == "BAD_LFP"
+    # Duration should be unchanged
+    assert abs(ann.duration[0] - 287.2) < 1e-6
