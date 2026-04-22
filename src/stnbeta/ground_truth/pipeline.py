@@ -58,14 +58,21 @@ def _parse_entities(fname: str) -> dict:
 # ── Epoch masking (public — tested in tests/test_ground_truth.py) ─────────────
 
 def get_epoch_mask(raw: mne.io.BaseRaw, description: str) -> np.ndarray:
-    """Boolean mask over raw samples: True where *description* epoch is active AND no BAD_* overlaps."""
+    """Boolean mask over raw samples: True where *description* epoch is active AND no BAD_* overlaps.
+
+    MNE returns ann["onset"] in absolute seconds from orig_time (meas_date).
+    Subtracting raw.first_time converts to sample-relative seconds (index 0 = first sample).
+    For RawArray / fifs with first_time=0 this is a no-op.
+    """
     n = len(raw.times)
     sfreq = raw.info["sfreq"]
+    first_time = float(raw.first_time)
     in_epoch = np.zeros(n, dtype=bool)
     is_bad = np.zeros(n, dtype=bool)
     for ann in raw.annotations:
-        s = int(round(ann["onset"] * sfreq))
-        e = int(round((ann["onset"] + ann["duration"]) * sfreq))
+        onset_rel = ann["onset"] - first_time   # absolute → relative-to-file-start
+        s = int(round(onset_rel * sfreq))
+        e = int(round((onset_rel + ann["duration"]) * sfreq))
         s, e = max(0, s), min(n, e)
         if ann["description"].upper().startswith("BAD"):
             is_bad[s:e] = True
