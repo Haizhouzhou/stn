@@ -151,6 +151,37 @@ def make_bipolar_pairs(lfp_names: list[str]) -> list[tuple[str, str, str]]:
     return pairs
 
 
+def _events_tsv_to_annotations(events_tsv_path: Path, meas_date=None):
+    """Build MNE Annotations from a BIDS events.tsv.
+
+    bad_* descriptions are uppercased (→ BAD_*) so MNE auto-excludes them.
+    Returns None if the file is missing or empty.
+    """
+    mne = _lazy_mne()
+    if not events_tsv_path.exists():
+        return None
+    df = pd.read_csv(events_tsv_path, sep="\t")
+    if df.empty:
+        return None
+    desc = df["trial_type"].astype(str).copy()
+    bad_mask = desc.str.lower().str.startswith("bad")
+    desc.loc[bad_mask] = desc.loc[bad_mask].str.upper()  # bad_lfp → BAD_LFP
+    return mne.Annotations(
+        onset=df["onset"].to_numpy(dtype=float),
+        duration=df["duration"].to_numpy(dtype=float),
+        description=desc.to_numpy(dtype=str),
+        orig_time=None,
+    )
+
+
+def attach_events_to_raw(raw, events_tsv_path: Path):
+    """Attach BIDS events.tsv annotations to raw in-place. Returns raw."""
+    ann = _events_tsv_to_annotations(events_tsv_path)
+    if ann is not None and len(ann) > 0:
+        raw.set_annotations(ann)
+    return raw
+
+
 def process_one_fif(fif_path: Path, montage_tsv: Path, out_fif: Path,
                     resample_hz: float, subject_id: str | None = None) -> dict[str, Any]:
     """Returns a provenance dict; raises on unrecoverable errors."""
@@ -242,6 +273,11 @@ def process_one_fif(fif_path: Path, montage_tsv: Path, out_fif: Path,
         raw.resample(resample_hz, npad="auto", verbose=False)
     prov["final_sfreq_hz"] = float(raw.info["sfreq"])
     prov["final_n_channels"] = len(raw.ch_names)
+
+    # Attach events.tsv annotations before saving so task/bad epochs ride with the fif
+    ev_tsv_src = fif_path.parent / f"{fif_path.name.replace('_meg.fif', '')}_events.tsv"
+    raw = attach_events_to_raw(raw, ev_tsv_src)
+    prov["annotations_attached"] = ev_tsv_src.exists()
 
     # Save
     out_fif.parent.mkdir(parents=True, exist_ok=True)
