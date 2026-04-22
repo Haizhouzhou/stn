@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-bursts = ["fooof"]
+bursts = ["specparam", "fooof", "seaborn", "pyarrow"]
 snn    = ["torch", "rockpool"]
 dev    = ["pytest", "pytest-cov", "ruff"]
 
