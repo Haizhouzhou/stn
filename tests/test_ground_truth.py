@@ -126,38 +126,43 @@ def test_annotation_first_time_offset():
 
 
 def test_mask_nonzero_first_time():
-    """get_epoch_mask must correctly handle annotations stored with absolute onsets.
+    """get_epoch_mask must subtract first_time from ann["onset"] to get file-relative indices.
 
-    Simulates a fif where first_time=257.25 s: the rest annotation's "onset"
-    when iterated is absolute (257.25 + BIDS_onset), so get_epoch_mask must
-    subtract first_time to recover the file-relative sample index.
+    Uses RawArray with first_samp=500 (first_time=5.0 s) and a meas_date so that
+    MNE stores annotation onsets as absolute (matching real fif files like sub-6m9kB5
+    where first_time=257.25 s).  Without meas_date, MNE treats onsets as file-relative
+    and clips the duration — this test verifies the absolute-onset path.
     """
+    import datetime
     sfreq = 100.0
-    duration_s = 10.0
-    first_time_s = 5.0   # simulate a non-zero first_time
-    n = int(duration_s * sfreq)
+    first_time_s = 5.0
+    first_samp = int(first_time_s * sfreq)   # 500
+    n = 1000   # 10 s of data spanning absolute time 5–15 s
     data = np.zeros((1, n))
     info = mne.create_info(["LFP-left-01"], sfreq, ch_types=["eeg"])
-    raw = mne.io.RawArray(data, info, verbose=False)
+    raw = mne.io.RawArray(data, info, first_samp=first_samp, verbose=False)
 
-    # Simulate what attach_events_to_raw stores: onset = BIDS_onset + first_time
-    # BIDS_onset=0 (start of recording), stored_onset = 0 + 5 = 5
-    # BAD at BIDS 2–3 s, stored as 7–8
+    meas_date = datetime.datetime(2000, 1, 1, tzinfo=datetime.timezone.utc)
+    raw.set_meas_date(meas_date)
+
+    assert abs(raw.first_time - first_time_s) < 1e-9, \
+        f"Expected first_time={first_time_s}, got {raw.first_time}"
+
+    # Absolute onsets = BIDS_onset + first_time, matching _events_tsv_to_annotations.
+    # rest:    BIDS onset=0 → absolute 5.0 s, duration=10 → spans whole file (5–15 s)
+    # BAD_LFP: BIDS onset=2 → absolute 7.0 s, duration=1  → file-relative 2–3 s
     ann = mne.Annotations(
         onset=[first_time_s + 0.0, first_time_s + 2.0],
-        duration=[duration_s, 1.0],
+        duration=[10.0, 1.0],
         description=["rest", "BAD_LFP"],
+        orig_time=meas_date,
     )
     raw.set_annotations(ann)
 
-    # Patch first_time so get_epoch_mask sees the offset
-    raw._first_samps = [int(first_time_s * sfreq)]
-
     mask = get_epoch_mask(raw, "rest")
 
-    # rest spans full file (0–10 s), BAD covers 2–3 s
-    # Clean rest: 0–2 s (200 samples) + 3–10 s (700 samples) = 900
-    assert mask[:200].all(),  "First 2 s should be in rest"
-    assert not mask[200:300].any(), "Samples 2–3 s (BAD_LFP overlap) must be excluded"
-    assert mask[300:].all(),  "Samples after BAD, still in rest, should be True"
-    assert mask.sum() == 900
+    # rest covers full file (0–10 s file-relative, all 1000 samples)
+    # BAD covers file-relative 2–3 s (samples 200–299)
+    # Clean rest: 0–2 s (200) + 3–10 s (700) = 900 samples
+    assert not mask[200:300].any(), "BAD_LFP overlap (file-relative 2–3 s) must be excluded"
+    assert mask.sum() == 900, f"Expected 900 clean rest samples, got {mask.sum()}"
