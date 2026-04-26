@@ -1,67 +1,48 @@
-# Large data — never commit
-raw/
-extracted/
-extracted.broken_*/
-extracted_dryrun/
-*.fif
-*.fif.gz
+# ============================================================
+# STN beta-burst / DYNAP-SE1 project
+# Keep source, docs, configs, tests, small audits/results tracked.
+# Never track raw data, local environments, caches, or huge binaries.
+# ============================================================
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.egg-info/
-dist/
-build/
-.eggs/
-*.egg
+# Raw / original data: never push
+raw/
+
+# Local Python / conda environments
+stn_env/
+stn_env_corrupted/
 .venv/
 venv/
 env/
+ENV/
+*.egg-info/
 
-# SLURM / job outputs
-logs/
-*.log
-.slurm_cache/
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# Results checkpoints and large outputs
-results/checkpoints/
-results/snn/*.pt
-wandb/
-
-# Editor / OS
-.DS_Store
-.idea/
-.vscode/
-*.swp
-*~
-
-# Jupyter
+# Jupyter / editor / OS noise
 .ipynb_checkpoints/
-*.ipynb
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Datalad internals (keep .datalad/ config but not annex objects)
-.git/annex/
+# Temporary / partial transfer files
+*.tmp
+*.temp
+*.part
+*.bak
+*.orig
 
-# Superseded root-level scripts (content moved to src/ and scripts/)
-/01_audit_cohort.py
-/02_extract_lfp.py
-/slurm_audit.sh
-/slurm_extract.sh
+# Cluster transient files that are usually not scientific artifacts
+core.*
 
-# Stray SLURM output files at repo root
-stn-audit_*.out
-stn-audit_*.err
-download_*.out
-download_*.err
-download_s3.sh
-reextract_*.log
-extract_dryrun.log
-
-# Claude Code session state
-.claude/
-
-# Datalad
-.datalad/
+# Auto-excluded files >=95MB; GitHub ordinary Git rejects >=100MB
