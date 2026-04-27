@@ -1,139 +1,215 @@
 # stnbeta
 
-STN beta-burst detection pipeline for ds004998, targeting eventual deployment on the
-DYNAP-SE1 neuromorphic chip. The pipeline runs on the UZH S3IT teaching cluster and
-produces ground-truth burst labels, ADM spike encodings, and SNN classifier results
-that feed into the hardware bring-up phase.
+STN-LFP beta-burst and beta-state detection for eventual DYNAP-SE1 evaluation.
 
-Full context and rationale: [STN_BetaBurst_DynapSE1_MasterPlan.md](STN_BetaBurst_DynapSE1_MasterPlan.md)
+The current roadmap is evidence-conditioned after Phase 5_2B. The old onset-alarm
+detector path is negative: the current causal Phase 4/5 representation did not pass
+onset, interval, long-burst, or burden targets. Phase 5_2B changed the next step by
+finding a coherent, causal, SNN/DYNAP-compatible feature family, but the strongest
+integrated evidence is still proxy/summary-level and carries some tautology risk.
 
----
+Current decision: proceed to Phase 5_2C pre-Brian2 refinement and validation. Do not
+start Phase 6 or DYNAP-SE1 hardware bring-up from the current evidence.
 
-## Phase status
+Primary roadmap: [MASTER_PLAN.md](MASTER_PLAN.md)
+
+## Project Identity
+
+- Primary signal: STN-LFP only.
+- MEG: optional future analysis only, not part of the primary detector pipeline.
+- Hardware target: DYNAP-SE1, not DYNAP-SE2, Rockpool, or a generic neuromorphic stack.
+- Hardware stack when hardware begins: samna / INI DYNAP-SE1 stack.
+- Simulation stack: Brian2 / Brian2CUDA is the primary SNN/NSM path.
+- PyTorch: allowed for training, feasibility checks, and upper-bound diagnostics only.
+- Accepted detector candidates must be replayed or implemented in Brian2,
+  Brian2CUDA, or Brian2-equivalent simulation before SNN, hardware, or deployment
+  claims.
+- Architectural identity: De Luca-style filter bank -> LI&F encoder -> population NSM.
+
+## Current Phase Status
 
 | Phase | Description | Status |
-|-------|-------------|--------|
-| 1 | Dataset acquisition + BIDS audit | ✅ Complete |
-| 2 | LFP extraction (monopolar + bipolar, 1 kHz) | ✅ Complete — 20 subjects, 108 runs, 7.2 GB |
-| 3 | Tinkhauser beta-burst ground truth | 🔲 Next |
-| 4 | ADM eventization sweep | 🔲 Pending |
-| 5 | SNN architecture exploration (simulation) | 🔲 Pending |
-| 6 | DYNAP-SE1 hardware bring-up | 🔲 Pending |
+| --- | --- | --- |
+| 1 | Dataset acquisition + BIDS audit | Complete |
+| 2 | LFP extraction | Complete |
+| 3 | Tinkhauser beta-burst ground truth | Complete; frozen labels |
+| 4 | Filter-bank / LI&F / Brian2CUDA / front-end setup | Complete |
+| 5A-5Z | Hand-designed monoNSM, front-end ablations, fusion probes, trainable recovery, representation-gap audit, predictive compensation, target reconciliation, and burden/long-burst state detection | Complete as negative for the current causal representation path |
+| 5_2A | Ground-truth-guided beta-burst feature atlas | Complete |
+| 5_2B | Participant-wise derivative/dynamics/hard-negative feature atlas | Complete |
+| 5_2B readout | Scientific extraction from completed atlas | Complete; conditional positive |
+| 5_2C | Candidate refinement, mechanistic pipeline, quantized/mismatched evaluation, SNN approximation, DYNAP feasibility audit, and Brian2 gate decision | Next |
+| 6 | Brian2 population detector simulation | Blocked until Phase 5_2C Outcome 1 |
+| Hardware | DYNAP-SE1 bring-up | Blocked until Brian2 detector passes |
 
----
+## Current Scientific Conclusion
 
-## Repo layout
+The old onset-alarm path is negative. Phase 5W showed that the offline Phase 3
+oracle can pass while causal replay and DYNAP-compatible upstream representations
+fail low-false-positive event recovery. Phase 5X predictive compensation improved
+some diagnostics but did not pass. Phase 5Y and Phase 5Z showed that interval,
+long-burst, and burden targets are meaningful, but the current causal traces still
+do not pass the controlled gates.
 
-```
-stn/
-├── src/stnbeta/          # importable library (pip install -e .)
-│   ├── io/               # BIDS loading, cohort audit
-│   ├── preprocessing/    # LFP extraction
-│   ├── ground_truth/     # burst labeling (Phase 3)
-│   ├── encoding/         # ADM eventization (Phase 4)
-│   ├── snn/              # SNN architectures (Phase 5)
-│   └── analysis/         # metrics, figures
-├── scripts/              # thin CLI wrappers (call src/ functions)
-├── slurm/                # SLURM job scripts
-├── configs/              # Hydra-style YAMLs
-├── results/              # all scientific outputs
-├── audit/                # BIDS audit outputs (cohort_summary.tsv etc.)
-├── extracted/            # extracted LFP .fif files (7.2 GB, sync-included)
-├── raw/                  # full BIDS tree (162 GB, sync-EXCLUDED)
-├── docs/                 # decisions.md and other docs
-└── tests/                # pytest
-```
+Phase 5_2B found a promising feature family:
 
----
+- `beta_local_baseline_ratio`
+- D1 / ON-count features
+- D2 / launch acceleration features
+- beta boundary veto / boundary contrast
+- low/high beta context
+- sparse channel weighting
+- dwell / burden integrator features
 
-## How to run from scratch
+The Phase 5_2B readout conclusion is B. Conditional positive: a coherent causal
+SNN/DYNAP-compatible feature family exists, but the strongest integrated evidence is
+proxy/summary-level and some rows retain tautology risk. The next step is therefore
+Phase 5_2C, not Phase 6, not hardware, and not a final limitation note.
 
-### 0. Install the package
+## What Went Wrong / What We Learned
 
-```bash
-cd ~/scratch/stn
-/home/haizhe/conda/envs/SSN/bin/python -m pip install -e .
-```
+Beta is not simply "13-30 Hz energy." A beta burst is an offline thresholded
+envelope interval. The previous detector path failed because true labeled bursts
+overlap with beta-like imposters:
 
-### 1. Cohort audit
+- high_beta_unlabeled
+- short_beta_like
+- near_threshold_beta
+- burst-adjacent beta
+- boundary/broadband artifact-like beta
 
-```bash
-# Login node is fine — no data loading
-python scripts/01_audit_cohort.py \
-    --bids-root ~/scratch/stn/raw \
-    --out ~/scratch/stn/audit
-# or via SLURM:
-sbatch slurm/slurm_audit.sh
-```
+Phase 5_2B showed that overlap may be reducible with local baseline normalization,
+D1 rise / ON-count, D2 launch / acceleration, dwell or burden integration, boundary
+vetoes, and spatial weighting. These are design cues, not accepted detector inputs
+until direct Phase 5_2C validation passes.
 
-Output: `audit/cohort_summary.tsv`, `audit/runs_detail.tsv`
+## Phase 5_2C Positioning
 
-### 2. LFP extraction
+Phase 5_2C is pre-Brian2. It should refine and validate the seven candidate feature
+families without adding new feature families and without making a final classifier
+claim.
 
-```bash
-# Must run on compute node — heavy CPU/RAM
-sbatch slurm/slurm_extract.sh
-# Resources: 6 CPU / 64 GB / 4 parallel workers / ~14 min wall-clock
-```
+Planned stages:
 
-Output: `extracted/sub-*/ses-PeriOp/meg/*_lfp.fif` (7.2 GB)
+A. Resolve Phase 5_2B residual issues: leakage sentinel classification, safe
+candidate set, and LOSO baselines for seven features.
 
-### 3. Beta-burst ground truth (Phase 3)
+B. Architecture decision: reactive vs predictive detector, with an ADR before
+pipeline design.
 
-```bash
-sbatch slurm/slurm_bursts.sh
-```
+C. Bounded hyperparameter refinement of the seven candidate feature families. No new
+feature families.
 
-Output: `results/bursts/`
+D. Multivariate combination analysis: minimum sufficient subset, LOSO held-out
+predictions, no final classifier claim.
 
-### 4. ADM sweep (Phase 4)
+E. Non-spiking mechanistic pipeline: continuous causal reference implementation only.
 
-```bash
-sbatch slurm/slurm_adm.sh
-```
+F. Three-tier performance estimation: continuous, quantized, and quantized plus
+mismatched.
 
-Output: `results/adm/`
+G. SNN approximation engineering: still pre-Brian2.
 
-### 5. SNN sweep (Phase 5)
+H. DYNAP-SE1 feasibility audit: CAM use, core mapping, bias groups, spike traffic,
+quantization, and mismatch.
 
-```bash
-sbatch slurm/slurm_snn.sh
-```
+I. Closeout: Outcome 1 proceeds to Brian2 simulation; all other outcomes block
+Brian2.
 
-Output: `results/snn/`
+## Environment
 
----
-
-## Sync to local (rsync recipe)
-
-To mirror everything except the raw data to a laptop for local analysis or
-DYNAP-SE1 hardware bring-up:
+Use the project boot script:
 
 ```bash
-rsync -avz --progress \
-  --exclude='raw/' \
-  --exclude='extracted.broken_*/' \
-  --exclude='__pycache__/' \
-  --exclude='*.pyc' \
-  --exclude='wandb/' \
-  --exclude='logs/*.out' \
-  --exclude='logs/*.err' \
-  --exclude='.git/objects/pack/' \
-  haizhe@cluster:/home/haizhe/scratch/stn/ \
-  ~/projects/stn/
+cd /scratch/haizhe/stn
+source /scratch/haizhe/stn/start_stn.sh
 ```
 
-After sync, on the laptop:
+The script activates `/scratch/haizhe/stn/stn_env`, loads CUDA 12.9.1, sets CUDA and
+Brian2CUDA library paths, preserves Slurm GPU visibility, and sets JAX memory
+behavior. `.venv-phase4` is legacy only and should be used only for exact archival
+reproduction of old scripts.
+
+Validate on a compute node:
 
 ```bash
-cd ~/projects/stn
-conda env create -f environment.yml   # or: pip install -e .
+python scripts/validate_stn_env.py --strict --require-gpu --brian2cuda-smoke
 ```
 
----
+Recorded compute-node validation for `stn_env` passed with 8 V100 GPUs visible,
+Torch CUDA true, JAX seeing 8 devices, Brian2CUDA import OK, and Brian2CUDA smoke
+passing.
 
-## Key references
+## Current Run Guidance
 
-- Tinkhauser et al. (2017) *Brain* — beta burst definition and threshold method
-- Little et al. (2019) *npj Parkinson's Disease* — clinical relevance
-- ds004998 on OpenNeuro — dataset
+No production Phase 5_2C command should be run until the Phase 5_2C prompt and
+resource request are approved. The intended Slurm style for the next gated stage is:
+
+```bash
+sbatch slurm/slurm_phase5_2c.sh
+```
+
+That command is documentation of the intended production style, not permission to run
+Phase 5_2C here. Phase 6 and hardware commands are intentionally blocked and are not
+listed as runnable next steps.
+
+## Brian2 And Diagnostic Policy
+
+NumPy, Pandas, and SciPy scripts are allowed for audits, summaries, and deterministic
+probes. PyTorch is allowed for training and upper-bound diagnostics. NumPy-only and
+PyTorch-only detector proxies are diagnostic only.
+
+Any accepted SNN/NSM detector candidate must be replayed or implemented in Brian2,
+Brian2CUDA, or Brian2-equivalent simulation before SNN, hardware, or deployment
+claims. Brian2 simulation is the next step only after the Phase 5_2C gate passes.
+
+## DYNAP-SE1 Constraints
+
+Hardware-aware candidates must report:
+
+- binary synapses
+- 64 CAM slots per neuron
+- parallel connections for graded weights
+- shared biases per 256-neuron core
+- fan-in and core mapping
+- quantization
+- mismatch
+- spike traffic
+- hardware-aware validation before deployment
+
+## Guardrails
+
+- Do not run heavy work on the login node.
+- Do not load MEG in the primary detector pipeline.
+- Do not modify Phase 3 labels, frozen splits, evaluation boundaries, or benchmark
+  definitions.
+- Do not start Phase 6 or DYNAP-SE1 hardware without an explicit gate pass.
+- Do not treat tautological Phase 3 threshold/duration features as deployable
+  detector inputs.
+- Do not treat proxy atlas features as final detector features until direct validation
+  passes.
+- Do not replace the detector with a generic black-box classifier.
+
+## Repository Layout
+
+```text
+src/stnbeta/          importable library code
+scripts/              CLI wrappers and analysis runners
+slurm/                Slurm batch scripts
+configs/              phase and model configuration files
+docs/                 runbooks, decisions, and phase reports
+results/              generated scientific outputs; do not stage blindly
+extracted/            extracted LFP files; do not stage
+raw/                  raw BIDS data; do not stage
+logs/ai_runs/         Codex task provenance logs
+tests/                pytest tests
+```
+
+## Key Evidence Files
+
+- [docs/PHASE5_RUNBOOK.md](docs/PHASE5_RUNBOOK.md)
+- [docs/PHASE5_2A_FEATURE_ATLAS.md](docs/PHASE5_2A_FEATURE_ATLAS.md)
+- [docs/PHASE5_2B_DERIVATIVE_DYNAMICS.md](docs/PHASE5_2B_DERIVATIVE_DYNAMICS.md)
+- [results/tables/05_phase5/feature_atlas_2b/phase5_2b_readout_analysis.md](results/tables/05_phase5/feature_atlas_2b/phase5_2b_readout_analysis.md)
+- [results/tables/05_phase5/feature_atlas_2b/phase5_2b_readout_summary.tsv](results/tables/05_phase5/feature_atlas_2b/phase5_2b_readout_summary.tsv)
+- [docs/decisions.md](docs/decisions.md)
