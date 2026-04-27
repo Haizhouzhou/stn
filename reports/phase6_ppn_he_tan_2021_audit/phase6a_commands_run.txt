@@ -1,0 +1,14 @@
+pwd
+git rev-parse --show-toplevel
+git status --short
+conda run -n stn_env python -V
+find . -maxdepth 3 -type d | sort | head -200
+find . -maxdepth 3 -type f | sort | head -200
+source /scratch/haizhe/stn/start_stn.sh && python -V
+/scratch/haizhe/stn/stn_env/bin/python -m py_compile scripts/phase6_audit_ppn_he_tan_2021.py
+/scratch/haizhe/stn/stn_env/bin/python scripts/phase6_audit_ppn_he_tan_2021.py --data-root cambium/Data_Code_PPN_JNeurosci_2021 --out-dir reports/phase6_ppn_he_tan_2021_audit --paper-fs 2048
+/scratch/haizhe/stn/stn_env/bin/python -m py_compile scripts/phase6_audit_ppn_he_tan_2021.py
+perl -pi -e 's/\r$//' reports/phase6_ppn_he_tan_2021_audit/*.csv && /scratch/haizhe/stn/stn_env/bin/python -m py_compile scripts/phase6_audit_ppn_he_tan_2021.py
+ls -lh reports/phase6_ppn_he_tan_2021_audit
+head -50 reports/phase6_ppn_he_tan_2021_audit/README_dataset_audit.md
+git status --short
