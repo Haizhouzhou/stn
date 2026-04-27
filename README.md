@@ -2,14 +2,17 @@
 
 STN-LFP beta-burst and beta-state detection for eventual DYNAP-SE1 evaluation.
 
-The current roadmap is evidence-conditioned after Phase 5_2B. The old onset-alarm
-detector path is negative: the current causal Phase 4/5 representation did not pass
-onset, interval, long-burst, or burden targets. Phase 5_2B changed the next step by
-finding a coherent, causal, SNN/DYNAP-compatible feature family, but the strongest
-integrated evidence is still proxy/summary-level and carries some tautology risk.
+The current roadmap is evidence-conditioned after Phase 5_2C causal validation and
+the owner-required pre-ADR bounded analysis. The old onset-alarm detector path
+remains negative at the original low-FP event-scoring gate. Phase 5_2C found a
+causal minimum sufficient subset and completed pre-Brian2 Stage F event scoring,
+but the owner rejected the low-recall event-target candidates. A bounded
+pre-ADR sprint then showed that score-to-alarm reconstruction has limited
+headroom, while event recall is highly sensitive to widened onset scoring.
 
-Current decision: proceed to Phase 5_2C pre-Brian2 refinement and validation. Do not
-start Phase 6 or DYNAP-SE1 hardware bring-up from the current evidence.
+Current decision: do not execute Phase 5_2C G/H/I, do not run Brian2, and do not
+reopen the architecture ADR yet. The next decision is an owner/scientific review of
+the event target and scoring tolerance before any formal ADR reopening.
 
 Primary roadmap: [MASTER_PLAN.md](MASTER_PLAN.md)
 
@@ -38,7 +41,7 @@ Primary roadmap: [MASTER_PLAN.md](MASTER_PLAN.md)
 | 5_2A | Ground-truth-guided beta-burst feature atlas | Complete |
 | 5_2B | Participant-wise derivative/dynamics/hard-negative feature atlas | Complete |
 | 5_2B readout | Scientific extraction from completed atlas | Complete; conditional positive |
-| 5_2C | Candidate refinement, mechanistic pipeline, quantized/mismatched evaluation, SNN approximation, DYNAP feasibility audit, and Brian2 gate decision | Next |
+| 5_2C | Candidate refinement, mechanistic pipeline, quantized/mismatched evaluation, Stage F event scoring, and pre-ADR bounded event/burden analysis | Complete through pre-ADR bounded analysis; G/H/I blocked |
 | 6 | Brian2 population detector simulation | Blocked until Phase 5_2C Outcome 1 |
 | Hardware | DYNAP-SE1 bring-up | Blocked until Brian2 detector passes |
 
@@ -61,10 +64,29 @@ Phase 5_2B found a promising feature family:
 - sparse channel weighting
 - dwell / burden integrator features
 
-The Phase 5_2B readout conclusion is B. Conditional positive: a coherent causal
-SNN/DYNAP-compatible feature family exists, but the strongest integrated evidence is
-proxy/summary-level and some rows retain tautology risk. The next step is therefore
-Phase 5_2C, not Phase 6, not hardware, and not a final limitation note.
+The Phase 5_2B readout conclusion was B. Conditional positive: a coherent causal
+SNN/DYNAP-compatible feature family existed, but the strongest integrated evidence
+was proxy/summary-level and some rows retained tautology risk. Phase 5_2C then
+completed causal Stage C/D/E/F with a minimum sufficient subset:
+
+- `causal_derivative_on_count__h150__smooth50ms__p95`
+- `causal_rise_slope__h100__smooth10ms__p85`
+
+Stage F event scoring remained weak at the original committed-alarm target. Tier 3
+median recall was about `0.039` at 2 FP/min and about `0.133` at 5 FP/min, so the
+owner rejected the prior low-recall candidate gates. The pre-ADR bounded analysis
+found:
+
+- bounded alarm reconstruction best Tier 3 proxy recall: `0.072810` at 2 FP/min
+  and `0.145639` at 5 FP/min;
+- widened onset scoring (`+/-600 ms`) sensitivity recall: `0.661713` at 2 FP/min
+  and `0.856359` at 5 FP/min;
+- best deployable burden/state estimate: high-burden AUROC `0.584675`.
+
+The current Phase 5_2C recommendation is therefore
+`EVENT_TARGET_METRIC_SENSITIVE`: the event target/scoring definition needs owner
+review before ADR reopening. This is not a G/H/I execution approval, not a Brian2
+gate, and not a final detector claim.
 
 ## What Went Wrong / What We Learned
 
@@ -80,41 +102,58 @@ overlap with beta-like imposters:
 
 Phase 5_2B showed that overlap may be reducible with local baseline normalization,
 D1 rise / ON-count, D2 launch / acceleration, dwell or burden integration, boundary
-vetoes, and spatial weighting. These are design cues, not accepted detector inputs
-until direct Phase 5_2C validation passes.
+vetoes, and spatial weighting. These remain design cues rather than an accepted
+detector because Phase 5_2C has not approved an event target, G/H/I execution, or
+Brian2 gate.
 
 ## Phase 5_2C Positioning
 
-Phase 5_2C is pre-Brian2. It should refine and validate the seven candidate feature
-families without adding new feature families and without making a final classifier
-claim.
+Phase 5_2C is pre-Brian2. It refined and validated causal candidate features
+without adding new feature families and without making a final classifier claim.
+The accepted Stage B architecture remains `hybrid_early_warning`, but G/H/I are
+blocked because no owner-approved event target exists after the low-recall gate
+rejection.
 
-Planned stages:
+Stage status:
 
-A. Resolve Phase 5_2B residual issues: leakage sentinel classification, safe
+A. Resolved Phase 5_2B residual issues: leakage sentinel classification, safe
 candidate set, and LOSO baselines for seven features.
 
-B. Architecture decision: reactive vs predictive detector, with an ADR before
-pipeline design.
+B. Selected `hybrid_early_warning` architecture.
 
-C. Bounded hyperparameter refinement of the seven candidate feature families. No new
-feature families.
+C. Completed bounded hyperparameter refinement of the causal candidate feature
+families. No new feature families.
 
-D. Multivariate combination analysis: minimum sufficient subset, LOSO held-out
+D. Completed multivariate combination analysis: minimum sufficient subset, LOSO held-out
 predictions, no final classifier claim.
 
-E. Non-spiking mechanistic pipeline: continuous causal reference implementation only.
+E. Completed non-spiking mechanistic pipeline: continuous causal reference implementation only.
 
-F. Three-tier performance estimation: continuous, quantized, and quantized plus
+F. Completed three-tier performance estimation: continuous, quantized, and quantized plus
 mismatched.
 
-G. SNN approximation engineering: still pre-Brian2.
+Pre-ADR bounded analysis. Completed after owner rejection of the low-recall event
+target candidates. Recommendation: `EVENT_TARGET_METRIC_SENSITIVE`.
 
-H. DYNAP-SE1 feasibility audit: CAM use, core mapping, bias groups, spike traffic,
-quantization, and mismatch.
+G. SNN approximation engineering: blocked until an owner-approved target and
+readiness update exist.
 
-I. Closeout: Outcome 1 proceeds to Brian2 simulation; all other outcomes block
-Brian2.
+H. DYNAP-SE1 feasibility audit: blocked with Stage G. The intended audit remains
+CAM use, core mapping, bias groups, spike traffic, quantization, and mismatch.
+
+I. Closeout: blocked with Stage G/H. Outcome 1 proceeds to Brian2 simulation only
+if all gates pass and an explicit event-level target is approved and satisfied; all
+other outcomes block Brian2.
+
+Current source artifacts:
+
+- `docs/PHASE5_2C_PRE_ADR_BOUNDED_REMEDIATION_ANALYSIS.md`
+- `docs/PHASE5_2C_EVENT_ALARM_RECONSTRUCTION_HEADROOM.md`
+- `docs/PHASE5_2C_SCORING_TOLERANCE_SENSITIVITY.md`
+- `docs/PHASE5_2C_BURDEN_STATE_CEILING_COMPARISON.md`
+- `docs/PHASE5_2C_PRE_ADR_RECOMMENDATION.md`
+- `results/tables/05_phase5/phase5_2c/pre_adr_recommendation.tsv`
+- `results/tables/05_phase5/phase5_2c/stage_g_h_i_readiness_assessment.tsv`
 
 ## Environment
 
@@ -142,16 +181,11 @@ passing.
 
 ## Current Run Guidance
 
-No production Phase 5_2C command should be run until the Phase 5_2C prompt and
-resource request are approved. The intended Slurm style for the next gated stage is:
-
-```bash
-sbatch slurm/slurm_phase5_2c.sh
-```
-
-That command is documentation of the intended production style, not permission to run
-Phase 5_2C here. Phase 6 and hardware commands are intentionally blocked and are not
-listed as runnable next steps.
+No production Phase 5_2C G/H/I command should be run from the current state.
+`stage_g_h_i_readiness_assessment.tsv` is `not_ready_scientific_gate_failed`, with
+`can_execute_stage_g_h_i_now=False`. The next action is owner/scientific review of
+the pre-ADR recommendation and event-scoring tolerance. Phase 6 and hardware
+commands are intentionally blocked and are not listed as runnable next steps.
 
 ## Brian2 And Diagnostic Policy
 
