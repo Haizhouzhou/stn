@@ -40,6 +40,17 @@
 - Do not kill productive running jobs.
 - Long runs must be checkpointed, resumable, and have manifests, config hashes, logs, and status files.
 
+## Long-Running Job Triage and Safe Acceleration Policy
+- This repo inherits the full long-running job triage policy from `~/.codex/AGENTS.md`; do not duplicate the global checklist or resource ladder here.
+- Do not passively wait for long-running jobs that are slow, stalled, under-resourced, not producing expected outputs, or likely to miss useful turnaround. Analyze progress, estimate ETA, diagnose the bottleneck, and decide whether safe acceleration is possible.
+- Never kill a productive running job unless the user explicitly authorizes it. Never modify raw/research data. Never corrupt, overwrite, race, or duplicate an active output path.
+- Safe acceleration must leave the original job untouched, preserve the same input/output contract, write to a separate staging path such as `outputs/<task>/accelerated_<timestamp>/`, use stronger immediate Slurm resources when appropriate, log why it was launched, and validate outputs before treating them as final.
+- Unsafe acceleration includes rerunning the same command against the same output path, overwriting active outputs, editing raw data, switching GPU work to CPU, silently reducing resources, or claiming success from an incomplete/different schema.
+- When a long-running job needs triage, write or update `outputs/current_status.md` with job id, command, working directory, elapsed time, requested resources, observed usage, expected/current outputs, last output modification time, progress estimate, ETA, bottleneck hypothesis, whether the original job is left running, any acceleration recommendation, exact accelerated resource request, staging output path, validation plan, and assumptions/uncertainties.
+- If a user says "do not kill" or "do not duplicate," interpret that as do not kill the productive job and do not duplicate the unsafe write path. Still analyze and, when safe, run an isolated accelerated equivalent in a staging path.
+- For accelerated heavy jobs, use `~/bin/claim_best_immediate_resource.sh` unless the user explicitly requests a different strategy: `--mode gpu` for GPU tasks and `--mode cpu` for CPU/memory-heavy tasks. Use immediate allocations only; do not submit waiting jobs.
+- If an accelerated attempt finishes first, validate schema, row counts, checksums or deterministic fields where applicable, compare against partial/expected outputs where possible, do not delete original outputs, and do not kill the original job without explicit approval.
+
 ## Slurm Submission Rules
 - For ad hoc heavy commands and resource-sensitive work, prefer `~/bin/claim_best_immediate_resource.sh`.
 - For production runs, prefer `sbatch` only after the resource request has been selected according to the strongest-immediate policy.
