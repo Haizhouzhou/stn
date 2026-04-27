@@ -1,0 +1,780 @@
+{
+  "audit_scope": "Phase 6A Part 2 dataset/code/data audit only; no MATLAB, FieldTrip, LME, permutation statistics, or preprocessing executed.",
+  "audit_timestamp": "2026-04-27T21:16:32+02:00",
+  "critical_issues": [
+    "2 non-metadata MAT file(s) were unreadable by available readers (Force_Scripts/ExampleData/Kont01_RL_Force.mat, Force_Scripts/ExampleData/Kont02_RL_Force.mat); these are HDF5/v7.3 example force files and h5py is missing in stn_env."
+  ],
+  "dataset_name": "Subthalamic nucleus correlates of force adaptation",
+  "dataset_root": "/scratch/haizhe/stn/cambium/Force_Scripts",
+  "environment_python": "/scratch/haizhe/stn/stn_env/bin/python (3.12.3)",
+  "expected_components_found": [
+    "CompareLevodopaDemographicsMVC",
+    "GetEvents_PD",
+    "GetEvents_HC",
+    "ExtractData",
+    "ExtractData_HC",
+    "GetForce_PD",
+    "GetForce_HC",
+    "Forceparameters",
+    "Forces_within",
+    "Stat_within",
+    "Forces_across",
+    "stat_across",
+    "Plot_Stats",
+    "GetLFP_FirstLevel",
+    "MakeMontage_AllBipolar",
+    "EpochData_TF",
+    "GetLFP_SecondLevel_PlotSpectra",
+    "GetLFP_SecondLevel_LME",
+    "PermTests_LME",
+    "GetLFP_SecondLevel_controlLME",
+    "GetEvents_Stim",
+    "GetForce_Stim",
+    "GetToS",
+    "ToS_DownsampleBinaryRemoveRamp",
+    "ToS_WindowedStim",
+    "ToS_Windowed_nexttrial",
+    "Plot_ToS",
+    "PermTests_ToS",
+    "GetLFP_FirstLevel_Stim",
+    "GetLFP_FirstLevel_Stim_TrigOnset",
+    "GetLFP_SecondLevel_Stim",
+    "GetLFP_SecondLevel_TrigOnset"
+  ],
+  "expected_components_missing": [
+    "computeCohen_d",
+    "jblill",
+    "shadedErrorBar"
+  ],
+  "expected_example_subjects": [
+    "Kont01",
+    "Kont02"
+  ],
+  "expected_stim_patients": 14,
+  "expected_study_hc_analyzed": 15,
+  "expected_study_pd_patients": 16,
+  "full_original_data_expected_in_package": false,
+  "hdf5_mat_files_unreadable_if_any": [
+    {
+      "error_message": "scipy:NotImplementedError: Please use HDF reader for matlab v7.3 files, e.g. h5py;h5py_unavailable:ModuleNotFoundError: No module named 'h5py';hdf5_mat_signature_detected",
+      "load_status": "unread",
+      "notes": "not deeply readable by available optional readers",
+      "relative_path": "Force_Scripts/ExampleData/Kont01_RL_Force.mat"
+    },
+    {
+      "error_message": "scipy:NotImplementedError: Please use HDF reader for matlab v7.3 files, e.g. h5py;h5py_unavailable:ModuleNotFoundError: No module named 'h5py';hdf5_mat_signature_detected",
+      "load_status": "unread",
+      "notes": "not deeply readable by available optional readers",
+      "relative_path": "Force_Scripts/ExampleData/Kont02_RL_Force.mat"
+    }
+  ],
+  "mat_read_failures": [
+    {
+      "error_message": "scipy:NotImplementedError: Please use HDF reader for matlab v7.3 files, e.g. h5py;h5py_unavailable:ModuleNotFoundError: No module named 'h5py';hdf5_mat_signature_detected",
+      "load_status": "unread",
+      "notes": "not deeply readable by available optional readers",
+      "relative_path": "Force_Scripts/ExampleData/Kont01_RL_Force.mat"
+    },
+    {
+      "error_message": "scipy:NotImplementedError: Please use HDF reader for matlab v7.3 files, e.g. h5py;h5py_unavailable:ModuleNotFoundError: No module named 'h5py';hdf5_mat_signature_detected",
+      "load_status": "unread",
+      "notes": "not deeply readable by available optional readers",
+      "relative_path": "Force_Scripts/ExampleData/Kont02_RL_Force.mat"
+    }
+  ],
+  "matlab_dependency_summary": {
+    "FieldTrip": 28,
+    "MATLAB_builtin_or_toolbox": 270,
+    "downloaded_helper": 11,
+    "local_function": 26,
+    "statistics_toolbox": 8,
+    "unknown": 444
+  },
+  "missing_dependency_summary": [
+    {
+      "dependency_name": "ft_apply_montage",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_freqanalysis",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_freqbaseline",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_freqgrandaverage",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_PlotSpectra.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_preprocessing",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_redefinetrial",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_resampledata",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_selectdata",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_LME.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ft_singleplotTFR",
+      "dependency_type_guess": "FieldTrip",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "computeCohen_d",
+      "dependency_type_guess": "downloaded_helper",
+      "example_caller": "Force_Scripts/1BehavioralData/CompareDemographicsLevodopaMVC.m",
+      "notes": "helper_expected_but_file_missing"
+    },
+    {
+      "dependency_name": "shadedErrorBar",
+      "dependency_type_guess": "downloaded_helper",
+      "example_caller": "Force_Scripts/1BehavioralData/Forces_across.m",
+      "notes": "helper_expected_but_file_missing"
+    },
+    {
+      "dependency_name": "corr",
+      "dependency_type_guess": "statistics_toolbox",
+      "example_caller": "Force_Scripts/1BehavioralData/Stat_within.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "fitlme",
+      "dependency_type_guess": "statistics_toolbox",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_LME.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ttest",
+      "dependency_type_guess": "statistics_toolbox",
+      "example_caller": "Force_Scripts/1BehavioralData/CompareDemographicsLevodopaMVC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ttest2",
+      "dependency_type_guess": "statistics_toolbox",
+      "example_caller": "Force_Scripts/1BehavioralData/CompareDemographicsLevodopaMVC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "A",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/ExtractData.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ACF",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PlotToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ACF_mean",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PlotToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ACF_sem",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PlotToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "AOq_HC",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "AOq_PD",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "AUCForce",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Forceparameters.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "AUCForcem",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Acc_S",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Acc_stS",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Act",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ActOptqu",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ActualForce",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All0_Beta",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All0_Beta_mean",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All0_Beta_sem",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All1_Beta",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All1_Beta_mean",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All1_Beta_sem",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "AllDBSpreb_Beta",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim_TrigOnset.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "AllTrials",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All_Alpha",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_PlotSpectra.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All_Beta",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_PlotSpectra.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "All_Gamma",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_PlotSpectra.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "BehM_nt",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_LME.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "BehM_nte",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_LME.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "BehM_s",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_LME.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "BehM_se",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/ToS_Windowed_nexttrial.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "BetaBand",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_SecondLevel_LME.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CF",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PlotToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CV",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CVO",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Ch",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ChForce",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ChangeForce",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Stat_within.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ChangeOptA",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ChangeOptB",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CorActOptForce_S",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CorFeedChangeForce_S",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CorM",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CorSignedFeedChangeForceHigh_S",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "CorSignedFeedChangeForceLow_S",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DBS",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/ToS_WindowedStim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DBSOnsets",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_FirstLevel_Stim_TrigOnset.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DBSb",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PlotToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DBSm",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PlotToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DBSv",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DelOptimalForce",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Stat_within.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DiffF_S",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "DiffForce",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Stat_within.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Events",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Forceparameters.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "EventsPeakForce",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_HC.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "EventsPeakForce_valid",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/GetForce_PD.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Events_valid",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Forceparameters.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "F1",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PermTests_ToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "F1diff_rand",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PermTests_ToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "F2",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PermTests_ToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "F2diff_rand",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/3DBSEffectsBehavior/PermTests_ToS.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Feedback",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Stat_within.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Force",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Forces_within.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ForceS",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Forces_across.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "ForceValue",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/Stat_within.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Force_HC",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Force_HC_sem",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    },
+    {
+      "dependency_name": "Force_PD",
+      "dependency_type_guess": "unknown",
+      "example_caller": "Force_Scripts/1BehavioralData/PlotStats.m",
+      "notes": ""
+    }
+  ],
+  "missing_example_subjects": [],
+  "module_summary": {
+    ".": {
+      "module_guess": "unknown",
+      "n_files": 94,
+      "n_mat_files": 4,
+      "n_matlab_files": 78
+    },
+    "Force_Scripts": {
+      "module_guess": "unknown",
+      "n_files": 49,
+      "n_mat_files": 4,
+      "n_matlab_files": 39
+    },
+    "Force_Scripts/1BehavioralData": {
+      "module_guess": "Behavioral force analysis / Figure 1",
+      "n_files": 14,
+      "n_mat_files": 0,
+      "n_matlab_files": 13
+    },
+    "Force_Scripts/2LocalFieldPotentialData": {
+      "module_guess": "STN LFP first/second-level analysis / Figures 2 and 3",
+      "n_files": 8,
+      "n_mat_files": 0,
+      "n_matlab_files": 7
+    },
+    "Force_Scripts/3DBSEffectsBehavior": {
+      "module_guess": "DBS timing effects on behavior / Figures 4 and 5",
+      "n_files": 15,
+      "n_mat_files": 0,
+      "n_matlab_files": 14
+    },
+    "Force_Scripts/4DBSEffectsLocalFieldPotential": {
+      "module_guess": "DBS timing effects on STN LFP / Figures 4 and 5",
+      "n_files": 6,
+      "n_mat_files": 0,
+      "n_matlab_files": 5
+    },
+    "Force_Scripts/ExampleData": {
+      "module_guess": "Example behavioral data",
+      "n_files": 4,
+      "n_mat_files": 4,
+      "n_matlab_files": 0
+    }
+  },
+  "noncritical_limitations": [
+    "Expected helper/component files not observed: computeCohen_d, jblill, shadedErrorBar.",
+    "Full original 16-patient/15-control raw cohort data are not present, which is expected from the paper data-availability statement unless another package claims to contain them.",
+    "MATLAB/FieldTrip/statistics-toolbox runtime readiness was not tested because this audit does not run MATLAB.",
+    "The extracted package contains macOS metadata stubs under __MACOSX and ._* files; these are inventoried but not treated as analysis files.",
+    "Some MATLAB calls resolve to external MATLAB/FieldTrip/toolbox/helper dependencies and must be resolved before reproduction."
+  ],
+  "observed_example_subjects": [
+    "Kont01",
+    "Kont02"
+  ],
+  "observed_subject_like_ids": [
+    "Kont01",
+    "Kont02",
+    "Kont03",
+    "Kont04",
+    "Kont06",
+    "Kont07",
+    "Kont08",
+    "Kont09",
+    "Kont10",
+    "Kont11",
+    "Kont12",
+    "Kont13",
+    "Kont14",
+    "Kont15",
+    "Kont16",
+    "PD04",
+    "PD11",
+    "PD12",
+    "PD13",
+    "PD14",
+    "PD15",
+    "PD16",
+    "PD17",
+    "PD18",
+    "PD19",
+    "PD20",
+    "PD21",
+    "PD22",
+    "PD23",
+    "PD24",
+    "PD25",
+    "PD26"
+  ],
+  "overall_status": "completed_with_critical_issues",
+  "possible_scan_or_identifiable_files": [],
+  "privacy_governance_flags": [
+    {
+      "evidence": "anonymized subject-like ID Kont01 in path",
+      "recommended_action": "Keep reports at aggregate/path level; do not expose raw sample values.",
+      "relative_path": "Force_Scripts/ExampleData/Kont01_Newevents.mat",
+      "risk_type": "subject_identifier_in_path",
+      "severity": "low"
+    },
+    {
+      "evidence": "anonymized subject-like ID Kont01 in path",
+      "recommended_action": "Keep reports at aggregate/path level; do not expose raw sample values.",
+      "relative_path": "Force_Scripts/ExampleData/Kont01_RL_Force.mat",
+      "risk_type": "subject_identifier_in_path",
+      "severity": "low"
+    },
+    {
+      "evidence": "anonymized subject-like ID Kont02 in path",
+      "recommended_action": "Keep reports at aggregate/path level; do not expose raw sample values.",
+      "relative_path": "Force_Scripts/ExampleData/Kont02_Newevents.mat",
+      "risk_type": "subject_identifier_in_path",
+      "severity": "low"
+    },
+    {
+      "evidence": "anonymized subject-like ID Kont02 in path",
+      "recommended_action": "Keep reports at aggregate/path level; do not expose raw sample values.",
+      "relative_path": "Force_Scripts/ExampleData/Kont02_RL_Force.mat",
+      "risk_type": "subject_identifier_in_path",
+      "severity": "low"
+    },
+    {
+      "evidence": "script name or code references demographics/levodopa/UPDRS",
+      "recommended_action": "Do not infer that clinical tables are shared unless data files are present.",
+      "relative_path": "Force_Scripts/1BehavioralData/CompareDemographicsLevodopaMVC.m",
+      "risk_type": "clinical_demographic_code_reference",
+      "severity": "low"
+    },
+    {
+      "evidence": "script name or code references demographics/levodopa/UPDRS",
+      "recommended_action": "Do not infer that clinical tables are shared unless data files are present.",
+      "relative_path": "__MACOSX/Force_Scripts/1BehavioralData/._CompareDemographicsLevodopaMVC.m",
+      "risk_type": "clinical_demographic_code_reference",
+      "severity": "low"
+    },
+    {
+      "evidence": "description or text mentions demographic/clinical variables",
+      "recommended_action": "Treat as documentation unless actual subject-level table is observed.",
+      "relative_path": "Force_Scripts/Description.rtf",
+      "risk_type": "clinical_demographic_text_reference",
+      "severity": "low"
+    }
+  ],
+  "recommended_next_steps": [
+    "Phase 6B should validate behavioral force/event parsing on the Kont01/Kont02 example data only, without assuming full cohort raw data.",
+    "Treat this package primarily as a code/reproducibility reference plus example behavioral data, not as a full raw STN LFP dataset.",
+    "Before Phase 6B behavioral force parsing, resolve MATLAB v7.3/HDF5 reading for the Kont01/Kont02 force files by using an approved h5py-capable stn_env or a MATLAB-side schema export.",
+    "Document MATLAB, FieldTrip, Statistics and Machine Learning Toolbox, and missing helper-script requirements before attempting reproduction.",
+    "Create a code-methods map from the MATLAB modules to the STN detector project before porting any analysis logic."
+  ],
+  "repo_root": "/scratch/haizhe/stn",
+  "sampling_rate_summary": {
+    "code_references": [
+      "Force_Scripts/1BehavioralData/Forces_across.m: xaxis=-1000:1000;",
+      "Force_Scripts/1BehavioralData/Forces_within.m: padnan=NaN(size(Force,1), 1000);",
+      "Force_Scripts/1BehavioralData/Forces_within.m: xaxis=-1000:1000;",
+      "Force_Scripts/1BehavioralData/GetForce_HC.m: RT(Subj)=mean(TimeToMax-1000); % time from Go to peak force in ms",
+      "Force_Scripts/1BehavioralData/GetForce_HC.m: SR=2048;",
+      "Force_Scripts/1BehavioralData/GetForce_HC.m: newSR=1000; % Downsample frequency",
+      "Force_Scripts/1BehavioralData/GetForce_PD.m: RT(Subj)=mean(TimeToMax-1000); % time from Go to peak force in ms",
+      "Force_Scripts/1BehavioralData/GetForce_PD.m: SR=2048;",
+      "Force_Scripts/1BehavioralData/GetForce_PD.m: newSR=1000; % Downsample frequency",
+      "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m: NewSR=200; % new sampling rate",
+      "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m: cfg.resamplefs=NewSR;",
+      "Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m: xaxis=-1:0.02:1; timew=100:200;",
+      "Force_Scripts/3DBSEffectsBehavior/Forces_across.m: xaxis=-1000:1000;",
+      "Force_Scripts/3DBSEffectsBehavior/Forces_within.m: padnan=NaN(size(Force,1), 1000);",
+      "Force_Scripts/3DBSEffectsBehavior/Forces_within.m: xaxis=-1000:1000;",
+      "Force_Scripts/3DBSEffectsBehavior/GetForce_Stim.m: SR=2048;",
+      "Force_Scripts/3DBSEffectsBehavior/GetForce_Stim.m: newSR=1000; % Downsample frequency",
+      "Force_Scripts/3DBSEffectsBehavior/GetStimProperties.m: SR=1000;",
+      "Force_Scripts/3DBSEffectsBehavior/GetToS.m: SR=2048; % original SR",
+      "Force_Scripts/3DBSEffectsBehavior/GetToS.m: newSR=1000; % new SR",
+      "Force_Scripts/3DBSEffectsBehavior/PlotToS.m: n_permutes=1000;",
+      "Force_Scripts/3DBSEffectsBehavior/ToS_NoCur.m: StimON(1:200)=0; % if any early bursts without onset. no task yet here, so irrelevant.",
+      "Force_Scripts/3DBSEffectsBehavior/ToS_NoCur.m: elseif StimON(j)==3 && mean(StimON(j+1:j+200))==0",
+      "Force_Scripts/3DBSEffectsBehavior/ToS_NoCur.m: if StimON(j)==3 && mean(StimON(j-200:j-1))==0",
+      "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_FirstLevel_Stim.m: BetaTimeResp=100:200;",
+      "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_FirstLevel_Stim.m: NewSR=200;",
+      "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_FirstLevel_Stim.m: cfg.resamplefs=NewSR;",
+      "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_FirstLevel_Stim_TrigOnset.m: DBSOnsets=TrigIN'/1000; %from 1000Hz rate to s",
+      "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_FirstLevel_Stim_TrigOnset.m: NewSR=200;",
+      "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_FirstLevel_Stim_TrigOnset.m: cfg.resamplefs=NewSR;",
+      "Force_Scripts/4DBSEffectsLocalFieldPotential/GetLFP_SecondLevel_Stim.m: n_permutes=1000;"
+    ],
+    "explicit_mat_fsample_values": [],
+    "lfp_analysis_downsampled_fs_hz": 200.0,
+    "notes": "2048 Hz is paper context only unless an explicit file/code field states it; 200 Hz and 1000 Hz are interpreted from code/package documentation context.",
+    "paper_default_lfp_fs_hz": 2048.0,
+    "stim_binary_downsampled_fs_hz": 1000.0
+  },
+  "total_csv_files": 0,
+  "total_excel_files": 0,
+  "total_files": 94,
+  "total_manifest_rows_including_zip_members": 94,
+  "total_mat_files": 4,
+  "total_matlab_files": 78,
+  "total_possible_behavioral_files": 6,
+  "total_possible_code_files": 39,
+  "total_possible_data_files": 6,
+  "total_possible_raw_lfp_files": 0,
+  "total_possible_stim_files": 0,
+  "total_real_matlab_code_files_excluding_macos_metadata": 39,
+  "total_text_files": 2,
+  "total_zip_files": 0
+}

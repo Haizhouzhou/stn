@@ -1,0 +1,8 @@
+relative_path,risk_type,severity,evidence,recommended_action
+Force_Scripts/ExampleData/Kont01_Newevents.mat,subject_identifier_in_path,low,anonymized subject-like ID Kont01 in path,Keep reports at aggregate/path level; do not expose raw sample values.
+Force_Scripts/ExampleData/Kont01_RL_Force.mat,subject_identifier_in_path,low,anonymized subject-like ID Kont01 in path,Keep reports at aggregate/path level; do not expose raw sample values.
+Force_Scripts/ExampleData/Kont02_Newevents.mat,subject_identifier_in_path,low,anonymized subject-like ID Kont02 in path,Keep reports at aggregate/path level; do not expose raw sample values.
+Force_Scripts/ExampleData/Kont02_RL_Force.mat,subject_identifier_in_path,low,anonymized subject-like ID Kont02 in path,Keep reports at aggregate/path level; do not expose raw sample values.
+Force_Scripts/1BehavioralData/CompareDemographicsLevodopaMVC.m,clinical_demographic_code_reference,low,script name or code references demographics/levodopa/UPDRS,Do not infer that clinical tables are shared unless data files are present.
+__MACOSX/Force_Scripts/1BehavioralData/._CompareDemographicsLevodopaMVC.m,clinical_demographic_code_reference,low,script name or code references demographics/levodopa/UPDRS,Do not infer that clinical tables are shared unless data files are present.
+Force_Scripts/Description.rtf,clinical_demographic_text_reference,low,description or text mentions demographic/clinical variables,Treat as documentation unless actual subject-level table is observed.

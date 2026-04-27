@@ -1,0 +1,33 @@
+subject_id,inferred_group,is_example_subject,source_of_detection,n_files,file_types,modules_present,behavioral_files_present,event_files_present,force_files_present,lfp_files_present,stim_files_present,notes
+Kont01,example_control,true,code_reference;filename;path,2,.mat,Example behavioral data,true,true,true,false,false,expected example behavioral subject observed
+Kont02,example_control,true,code_reference;filename;path,2,.mat,Example behavioral data,true,true,true,false,false,expected example behavioral subject observed
+Kont03,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont04,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont06,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont07,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont08,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont09,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont10,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont11,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont12,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont13,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont14,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont15,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+Kont16,example_control,true,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD04,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD11,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD12,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD13,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD14,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD15,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD16,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD17,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD18,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD19,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD20,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD21,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD22,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD23,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD24,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD25,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed
+PD26,PD,false,code_reference,0,,,false,false,false,false,false,subject_id_referenced_in_code_only_no_shared_file_observed

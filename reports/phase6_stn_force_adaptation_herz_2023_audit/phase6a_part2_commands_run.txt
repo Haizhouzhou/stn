@@ -1,0 +1,25 @@
+pwd
+git rev-parse --show-toplevel
+git status --short
+conda run -n stn_env python -V
+source /scratch/haizhe/stn/start_stn.sh && python -V
+find . -maxdepth 3 -type d | sort | head -200
+find . -maxdepth 3 -type f | sort | head -200
+find cambium/Force_Scripts -maxdepth 4 -type d | sort | head -300
+find cambium/Force_Scripts -maxdepth 4 -type f | sort | head -300
+rg --files scripts | rg 'audit|phase6|ppn|PPN|dataset'
+find reports -maxdepth 3 -type d | sort | head -200
+find reports -maxdepth 3 -type f | sort | head -300
+sed -n '1,220p' scripts/phase6_audit_ppn_he_tan_2021.py
+sed -n '1,220p' reports/phase6_ppn_he_tan_2021_audit/README_dataset_audit.md
+sed -n '1,160p' cambium/Force_Scripts/Force_Scripts/1BehavioralData/ExtractData.m
+sed -n '1,160p' cambium/Force_Scripts/Force_Scripts/2LocalFieldPotentialData/GetLFP_FirstLevel.m
+sed -n '1,180p' cambium/Force_Scripts/Force_Scripts/3DBSEffectsBehavior/GetEvents_Stim.m
+python - <<'PY' ... read first bytes of Description.rtf ... PY
+source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6_audit_stn_force_adaptation_herz_2023.py --data-root cambium/Force_Scripts --out-dir reports/phase6_stn_force_adaptation_herz_2023_audit --paper-fs 2048 --lfp-analysis-fs 200 --stim-binary-fs 1000
+source /scratch/haizhe/stn/start_stn.sh && python -m py_compile scripts/phase6_audit_stn_force_adaptation_herz_2023.py
+ls -lh reports/phase6_stn_force_adaptation_herz_2023_audit
+head -80 reports/phase6_stn_force_adaptation_herz_2023_audit/README_dataset_audit.md
+git diff --check
+find reports/phase6_stn_force_adaptation_herz_2023_audit -type f -size +5M -print
+git status --short
