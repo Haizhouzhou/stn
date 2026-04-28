@@ -1,0 +1,27 @@
+pwd
+git rev-parse --show-toplevel
+git status --short
+source /scratch/haizhe/stn/start_stn.sh && python -V
+ls -lh reports/phase6a0_burden_viability || true
+python - <<'PY' ... Phase 6A.0 findings JSON ... PY
+find results/tables/05_phase5 -maxdepth 4 -type f | sort | head -300 || true
+find reports -maxdepth 5 -type f | sort | grep -E 'phase5|5_2|5Y|5_2C|burden|feature|ADR|phase6a0' | head -500 || true
+rg -n "Phase 5_2B|Phase 5_2C|Phase 5Y|burden|AUROC|LOSO|MedOff|MedOn|Hold|Move|UPDRS|bradykinesia|causal_feature_matrix|refined feature|feature subset|beta-feature" reports scripts results config configs data 2>/dev/null | head -800 || true
+source /scratch/haizhe/stn/start_stn.sh && python -m py_compile scripts/phase6a0_5_burden_failure_autopsy.py
+source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6a0_5_burden_failure_autopsy.py --input-table results/tables/05_phase5/phase5_2c/causal_feature_matrix.tsv --out-dir reports/phase6a0_5_burden_failure_autopsy --stop-after-continuity
+~/bin/claim_best_immediate_resource.sh --mode cpu --candidate "--partition=teaching --account=mlnlp2.pilot.s3it.uzh --qos=normal --nodes=1 --ntasks=1 --cpus-per-task=32 --mem=128G --time=04:00:00" "cd /scratch/haizhe/stn && source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6a0_5_burden_failure_autopsy.py --input-table results/tables/05_phase5/phase5_2c/causal_feature_matrix.tsv --out-dir reports/phase6a0_5_burden_failure_autopsy --stop-after-continuity"
+source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6a0_5_burden_failure_autopsy.py --input-table results/tables/05_phase5/phase5_2c/causal_feature_matrix.tsv --out-dir reports/phase6a0_5_burden_failure_autopsy --tau-ms 200,500,800,1500,3000,5000
+~/bin/claim_best_immediate_resource.sh --mode cpu --candidate "--partition=teaching --account=mlnlp2.pilot.s3it.uzh --qos=normal --nodes=1 --ntasks=1 --cpus-per-task=32 --mem=128G --time=04:00:00" "cd /scratch/haizhe/stn && source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6a0_5_burden_failure_autopsy.py --input-table results/tables/05_phase5/phase5_2c/causal_feature_matrix.tsv --out-dir reports/phase6a0_5_burden_failure_autopsy --tau-ms 200,500,800,1500,3000,5000"
+sacct -j 2579671 --format=JobID,State,Elapsed,ExitCode,ReqTRES,AllocTRES,MaxRSS,AveCPU,CPUTimeRAW
+sacct -j 2579717 --format=JobID,State,Elapsed,ExitCode,ReqTRES,AllocTRES,MaxRSS,AveCPU,CPUTimeRAW
+sacct -j 2580330 --format=JobID,State,Elapsed,ExitCode,ReqTRES,AllocTRES,MaxRSS,AveCPU,CPUTimeRAW
+seff 2579671 2>/dev/null || true
+seff 2579717 2>/dev/null || true
+seff 2580330 2>/dev/null || true
+ls -lh reports/phase6a0_5_burden_failure_autopsy
+head -120 reports/phase6a0_5_burden_failure_autopsy/README_burden_failure_autopsy.md
+python - <<'PY' ... print burden_failure_autopsy_findings.json ... PY
+git diff --check
+find reports/phase6a0_5_burden_failure_autopsy -type f -size +5M -print
+git status --short
+actual script argv: /scratch/haizhe/stn/stn_env/bin/python scripts/phase6a0_5_burden_failure_autopsy.py --input-table results/tables/05_phase5/phase5_2c/causal_feature_matrix.tsv --out-dir reports/phase6a0_5_burden_failure_autopsy --tau-ms 200,500,800,1500,3000,5000

@@ -1,0 +1,10 @@
+requirement,status,evidence,severity,notes
+subject identifier exists,pass,subject_id,info,
+binary label or annotation-derived target exists,pass,"target_label; values=['0.0', '1.0']",info,
+row order or time column exists,pass,window_start_s,info,
+at least 5 allowed causal feature columns exist,pass,297,info,
+at least 8 subjects exist,pass,20,info,
+table is not from external PPN/Herz paths,pass,results/tables/05_phase5/phase5_2c/causal_feature_matrix.tsv,info,
+table is not merely an aggregate report,pass,rows_sampled=690088; columns=373,info,
+table has enough rows per subject for burden/time analysis,pass,min_rows_per_subject=17836,info,
+table is a definitive continuous burden stream,fail,event_or_candidate_matrix,critical,"Phase 6A.0.5 may compute pseudo-burden for diagnostics, but event/candidate matrices are not definitive burden streams."
