@@ -1,0 +1,4 @@
+column_name,risk_type,severity,evidence,action
+fif_path,suspicious leakage columns,medium,contains leakage keyword 'path',excluded from model features
+anchor_onset_s,suspicious leakage columns,medium,contains leakage keyword 'onset',excluded from model features
+anchor_offset_s,suspicious leakage columns,medium,contains leakage keyword 'offset',excluded from model features

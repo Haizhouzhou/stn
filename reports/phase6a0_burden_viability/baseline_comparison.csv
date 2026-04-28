@@ -1,0 +1,21 @@
+baseline_name,tau_ms,median_spearman,iqr25_spearman,iqr75_spearman,n_valid_subjects,notes
+class_prior_baseline,200.0,0.009583618543768904,-0.0006903941322466915,0.022252854089013705,20,subject-level median; no pooled-window gate
+shuffled_label_baseline,200.0,-0.0007220186920555748,-0.028801797804331317,0.028078895142944402,20,subject-level median; no pooled-window gate
+simple_beta_feature_baseline,200.0,0.1805926429643106,0.11437557757256989,0.22743925634315781,20,subject-level median; no pooled-window gate
+model_based_burden_estimate,200.0,0.19494261756066633,0.12303651394616383,0.21196955146714586,20,subject-level median; no pooled-window gate
+class_prior_baseline,500.0,0.02319779712423524,0.006115626468248229,0.053125962390037154,20,subject-level median; no pooled-window gate
+shuffled_label_baseline,500.0,0.0003244879342568928,-0.03471671105446838,0.04440367735998155,20,subject-level median; no pooled-window gate
+simple_beta_feature_baseline,500.0,0.1971733182524656,0.12203122788338182,0.24477261542353476,20,subject-level median; no pooled-window gate
+model_based_burden_estimate,500.0,0.21698217886900945,0.13802014857031214,0.2404063587825595,20,subject-level median; no pooled-window gate
+class_prior_baseline,800.0,0.03668964076309751,0.015345098587921765,0.06804967426695482,20,subject-level median; no pooled-window gate
+shuffled_label_baseline,800.0,0.0028567370921259985,-0.03516307418093485,0.05968013061674847,20,subject-level median; no pooled-window gate
+simple_beta_feature_baseline,800.0,0.2085157688025994,0.12879537498551713,0.25299718972047874,20,subject-level median; no pooled-window gate
+model_based_burden_estimate,800.0,0.23080836757185158,0.1531314134474822,0.2640867103540927,20,subject-level median; no pooled-window gate
+class_prior_baseline,1500.0,0.09670833901274364,0.056699116186005136,0.119860550182335,20,subject-level median; no pooled-window gate
+shuffled_label_baseline,1500.0,0.010946795730826148,-0.03244245587724865,0.07431443186125815,20,subject-level median; no pooled-window gate
+simple_beta_feature_baseline,1500.0,0.22656981435429302,0.1296771919543456,0.25806110654784015,20,subject-level median; no pooled-window gate
+model_based_burden_estimate,1500.0,0.24706277086051123,0.17700426706575895,0.29656955301463067,20,subject-level median; no pooled-window gate
+class_prior_baseline,3000.0,0.10720896000980693,0.05924716135565214,0.1949696799974372,20,subject-level median; no pooled-window gate
+shuffled_label_baseline,3000.0,0.03811309853555812,-0.000975293702495942,0.10616129674270658,20,subject-level median; no pooled-window gate
+simple_beta_feature_baseline,3000.0,0.22797459976862877,0.12563098441263598,0.282919479363764,20,subject-level median; no pooled-window gate
+model_based_burden_estimate,3000.0,0.2602476064282385,0.20544897244336546,0.3138296522001664,20,subject-level median; no pooled-window gate

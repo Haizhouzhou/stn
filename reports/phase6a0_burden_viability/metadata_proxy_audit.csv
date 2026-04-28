@@ -1,0 +1,7 @@
+proxy_column,proxy_type,n_unique,top_values,status,notes
+condition,task_or_metadata,6,MedOff_Rest:173963;MedOn_Rest:158607;MedOff_Move:107417;MedOff_Hold:86582;MedOn_Hold:84015;MedOn_Move:79504,available,supportive proxy only; not primary gate
+medication_state,task_or_metadata,2,MedOff:367962;MedOn:322126,available,supportive proxy only; not primary gate
+task_state,task_or_metadata,3,Rest:332570;Move:186921;Hold:170597,available,supportive proxy only; not primary gate
+channel,task_or_metadata,14,LFP-right-12:123234;LFP-right-01:118843;LFP-right-23:110825;LFP-left-01:105180;LFP-left-23:100623;LFP-left-12:96944;LFP-left-56:4534;LFP-left-45:4414;LFP-right-67:4346;LFP-right-56:4345;LFP-left-67:4263;LFP-right-34:4236;LFP-left-34:4171;LFP-right-45:4130,available,supportive proxy only; not primary gate
+band_mode,task_or_metadata,1,fixed_13_30:690088,available,supportive proxy only; not primary gate
+clinical_scores,clinical,0,,not_assessable,No UPDRS/bradykinesia/tremor/rigidity columns in selected input.

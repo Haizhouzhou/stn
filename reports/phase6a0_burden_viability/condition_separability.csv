@@ -1,0 +1,5 @@
+proxy_type,positive_condition,negative_condition,value_column,n_units,positive_mean,negative_mean,cohens_d,rank_biserial_or_auc,notes
+medication_state,MedOff,MedOn,mean_predicted_burden,111,0.44567586997621716,0.4353580560200478,0.26620585799971574,0.5957792207792207,subject-condition units; supportive proxy only
+task_state,Hold,Move,mean_predicted_burden,71,0.4377956218616303,0.43687307347642196,0.02957793763893011,0.49047619047619045,subject-condition units; supportive proxy only
+task_state,Rest,Move,mean_predicted_burden,75,0.4462835460269331,0.43687307347642196,0.22874187904695215,0.5235714285714286,subject-condition units; supportive proxy only
+task_state,Rest,Hold,mean_predicted_burden,76,0.4462835460269331,0.4377956218616303,0.2005076972899538,0.5236111111111111,subject-condition units; supportive proxy only

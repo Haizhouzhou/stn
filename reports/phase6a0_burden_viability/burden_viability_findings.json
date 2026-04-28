@@ -1,0 +1,156 @@
+{
+  "allowed_feature_count": 354,
+  "audit_timestamp": "2026-04-28T02:07:37+02:00",
+  "baseline_summary": {
+    "class_prior_baseline": {
+      "baseline_name": "class_prior_baseline",
+      "iqr25_spearman": 0.05924716135565214,
+      "iqr75_spearman": 0.1949696799974372,
+      "median_spearman": 0.10720896000980693,
+      "n_valid_subjects": 20,
+      "notes": "subject-level median; no pooled-window gate",
+      "tau_ms": 3000.0
+    },
+    "model_based_burden_estimate": {
+      "baseline_name": "model_based_burden_estimate",
+      "iqr25_spearman": 0.20544897244336546,
+      "iqr75_spearman": 0.3138296522001664,
+      "median_spearman": 0.2602476064282385,
+      "n_valid_subjects": 20,
+      "notes": "subject-level median; no pooled-window gate",
+      "tau_ms": 3000.0
+    },
+    "shuffled_label_baseline": {
+      "baseline_name": "shuffled_label_baseline",
+      "iqr25_spearman": -0.000975293702495942,
+      "iqr75_spearman": 0.10616129674270658,
+      "median_spearman": 0.03811309853555812,
+      "n_valid_subjects": 20,
+      "notes": "subject-level median; no pooled-window gate",
+      "tau_ms": 3000.0
+    },
+    "simple_beta_feature_baseline": {
+      "baseline_name": "simple_beta_feature_baseline",
+      "iqr25_spearman": 0.12563098441263598,
+      "iqr75_spearman": 0.282919479363764,
+      "median_spearman": 0.22797459976862877,
+      "n_valid_subjects": 20,
+      "notes": "subject-level median; no pooled-window gate",
+      "tau_ms": 3000.0
+    }
+  },
+  "best_tau_median_pearson": 0.24896977374123425,
+  "best_tau_median_spearman": 0.2602476064282385,
+  "best_tau_ms": 3000.0,
+  "block_column": "condition",
+  "clinical_proxy_summary": {
+    "n_units": 0,
+    "notes": "No UPDRS/bradykinesia/tremor/rigidity score columns in selected table.",
+    "pearson": "",
+    "proxy_name": "clinical_scores",
+    "spearman": "",
+    "status": "not_assessable"
+  },
+  "condition_proxy_summary": {
+    "rows": [
+      {
+        "cohens_d": 0.26620585799971574,
+        "n_units": 111,
+        "negative_condition": "MedOn",
+        "negative_mean": 0.4353580560200478,
+        "notes": "subject-condition units; supportive proxy only",
+        "positive_condition": "MedOff",
+        "positive_mean": 0.44567586997621716,
+        "proxy_type": "medication_state",
+        "rank_biserial_or_auc": 0.5957792207792207,
+        "value_column": "mean_predicted_burden"
+      },
+      {
+        "cohens_d": 0.02957793763893011,
+        "n_units": 71,
+        "negative_condition": "Move",
+        "negative_mean": 0.43687307347642196,
+        "notes": "subject-condition units; supportive proxy only",
+        "positive_condition": "Hold",
+        "positive_mean": 0.4377956218616303,
+        "proxy_type": "task_state",
+        "rank_biserial_or_auc": 0.49047619047619045,
+        "value_column": "mean_predicted_burden"
+      },
+      {
+        "cohens_d": 0.22874187904695215,
+        "n_units": 75,
+        "negative_condition": "Move",
+        "negative_mean": 0.43687307347642196,
+        "notes": "subject-condition units; supportive proxy only",
+        "positive_condition": "Rest",
+        "positive_mean": 0.4462835460269331,
+        "proxy_type": "task_state",
+        "rank_biserial_or_auc": 0.5235714285714286,
+        "value_column": "mean_predicted_burden"
+      },
+      {
+        "cohens_d": 0.2005076972899538,
+        "n_units": 76,
+        "negative_condition": "Hold",
+        "negative_mean": 0.4377956218616303,
+        "notes": "subject-condition units; supportive proxy only",
+        "positive_condition": "Rest",
+        "positive_mean": 0.4462835460269331,
+        "proxy_type": "task_state",
+        "rank_biserial_or_auc": 0.5236111111111111,
+        "value_column": "mean_predicted_burden"
+      }
+    ],
+    "status": "available"
+  },
+  "critical_blockers": [
+    "Gate thresholds for PASS/CONDITIONAL_PASS were not met."
+  ],
+  "environment_python": "/scratch/haizhe/stn/stn_env/bin/python (3.12.3)",
+  "excluded_feature_count": 19,
+  "gate_rationale": "Gate thresholds for PASS/CONDITIONAL_PASS were not met.",
+  "leakage_risk_summary": "3 excluded/suspicious columns; selected model features restricted to allowed causal feature list.",
+  "median_pearson_by_tau": {
+    "1500": 0.23588365345703,
+    "200": 0.19833266877777161,
+    "3000": 0.24896977374123425,
+    "500": 0.2156129276828324,
+    "800": 0.22663720287504674
+  },
+  "median_spearman_by_tau": {
+    "1500": 0.24706277086051123,
+    "200": 0.19494261756066633,
+    "3000": 0.2602476064282385,
+    "500": 0.21698217886900945,
+    "800": 0.23080836757185158
+  },
+  "noncritical_limitations": [
+    "Model used deterministic subset of 96 selected allowed features from 354 allowed causal features to keep Phase 6A.0 lightweight and report-sized.",
+    "allowed features from metadata results/tables/05_phase5/phase5_2c/causal_feature_matrix_feature_metadata.tsv"
+  ],
+  "overall_status": "FAIL",
+  "phase": "Phase 6A.0 burden-target viability gate",
+  "recommended_next_steps": [
+    "Stop Phase 6 simulation work and reconsider the burden/state-machine pivot.",
+    "Inspect whether target construction, feature families, or annotation burden definition should be revised."
+  ],
+  "repo_root": "/scratch/haizhe/stn",
+  "selected_input_files": [
+    "results/tables/05_phase5/phase5_2c/causal_feature_matrix.tsv"
+  ],
+  "selected_model_feature_count": 96,
+  "selected_subject_count": 20,
+  "session_column": "",
+  "subject_column": "subject_id",
+  "target_label_column": "target_label",
+  "tau_ms_values": [
+    200.0,
+    500.0,
+    800.0,
+    1500.0,
+    3000.0
+  ],
+  "time_column": "window_start_s",
+  "valid_subject_count": 20
+}

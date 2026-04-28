@@ -1,0 +1,2 @@
+proxy_name,status,n_units,spearman,pearson,notes
+clinical_scores,not_assessable,0,,,No UPDRS/bradykinesia/tremor/rigidity score columns in selected table.

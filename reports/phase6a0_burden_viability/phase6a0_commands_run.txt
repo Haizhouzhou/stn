@@ -1,0 +1,24 @@
+pwd
+git rev-parse --show-toplevel
+git status --short
+source /scratch/haizhe/stn/start_stn.sh && python -V
+find . -maxdepth 3 -type d | sort | head -300
+find . -maxdepth 3 -type f | sort | head -300
+find reports -maxdepth 4 -type f | sort | grep -E 'phase3|phase4|phase5|5_2|5Y|burden|burst|ADR|audit' | head -300 || true
+find data -maxdepth 5 -type f | sort | grep -E 'phase3|phase4|phase5|burst|burden|feature|label|stn|parquet|csv|json|pkl|npz|mat' | head -300 || true
+rg -n "Phase 5_2B|Phase 5_2C|burden|AUROC|268,959|LOSO|MedOff|MedOn|Hold|Move|UPDRS|bradykinesia|burst" reports scripts data config configs pyproject.toml README* 2>/dev/null | head -500 || true
+source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6a0_burden_viability.py --out-dir reports/phase6a0_burden_viability --stop-after-discovery
+source /scratch/haizhe/stn/start_stn.sh && python -m py_compile scripts/phase6a0_burden_viability.py
+~/bin/claim_best_immediate_resource.sh --mode cpu "cd /scratch/haizhe/stn && source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6a0_burden_viability.py --out-dir reports/phase6a0_burden_viability --tau-ms 200,500,800,1500,3000"
+sinfo -o '%P %a %l %D %c %m %G' | head -80
+sacctmgr -nP show assoc user=$USER format=Account,Partition,QOS 2>/dev/null | head -80 || true
+sinfo -p teaching -o '%P %a %l %D %c %m %G' || true
+~/bin/claim_best_immediate_resource.sh --mode cpu --candidate "--partition=teaching --account=mlnlp2.pilot.s3it.uzh --qos=normal --nodes=1 --ntasks=1 --cpus-per-task=32 --mem=128G --time=04:00:00" "cd /scratch/haizhe/stn && source /scratch/haizhe/stn/start_stn.sh && python scripts/phase6a0_burden_viability.py --out-dir reports/phase6a0_burden_viability --tau-ms 200,500,800,1500,3000"
+sacct -j 2577074 --format=JobID,State,Elapsed,ExitCode,ReqTRES,AllocTRES,MaxRSS,AveCPU,CPUTimeRAW
+seff 2577074 2>/dev/null || true
+ls -lh reports/phase6a0_burden_viability
+head -100 reports/phase6a0_burden_viability/README_burden_viability.md
+python - <<'PY' ... print burden_viability_findings.json ... PY
+git diff --check
+find reports/phase6a0_burden_viability -type f -size +5M -print
+git status --short
