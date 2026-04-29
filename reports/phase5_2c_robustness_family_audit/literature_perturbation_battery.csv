@@ -1,0 +1,20 @@
+condition_id,family,level,seed_count,description
+clean,clean,0.0,1,No perturbation; establishes baseline operating region.
+input_gaussian_0p02,input_current_additive_gaussian,0.02,5,Additive current noise at 2% of current std.
+input_gaussian_0p05,input_current_additive_gaussian,0.05,5,Additive current noise at 5% of current std.
+input_gaussian_0p10,input_current_additive_gaussian,0.1,5,Additive current noise at 10% of current std.
+gain_noise_0p05,input_current_multiplicative_gain,0.05,5,Per-run multiplicative encoder gain noise.
+slow_drift_0p10,input_current_slow_drift,0.1,5,Linear gain drift across the synthetic trial.
+colored_1f_0p05,physiological_colored_noise,0.05,5,1/f-like current perturbation for end-to-end LFP risk.
+line_50hz_0p05,physiological_line_noise,0.05,5,50 Hz sinusoidal current contamination.
+event_jitter_5ms,event_timing_jitter,5.0,5,Event boundary jitter of +/-5 ms.
+event_dropout_0p10,event_dropout,0.1,5,Random dropout of active beta evidence samples.
+false_spikes_0p02,false_background_spikes,0.02,5,Sparse false beta-evidence samples in negative intervals.
+impulse_artifact_0p25,artifact_impulse,0.25,5,Short high-amplitude impulse artifacts.
+clipping_0p75,artifact_clipping,0.75,5,Amplitude clipping that distorts strong beta evidence.
+mismatch_0p05,hardware_mismatch,0.05,5,"Gaussian mismatch on thresholds, weights, reset, and quiet gain."
+mismatch_0p10,hardware_mismatch,0.1,5,Gaussian mismatch at literature-grounded 10% level.
+mismatch_0p20,hardware_mismatch,0.2,5,Stress-test mismatch at 20% level.
+quant_8bit,quantization,8.0,5,8-bit current/readout quantization.
+quant_6bit,quantization,6.0,5,6-bit current/readout quantization.
+quant_4bit,quantization,4.0,5,4-bit DYNAP-SE-style quantization stress test.

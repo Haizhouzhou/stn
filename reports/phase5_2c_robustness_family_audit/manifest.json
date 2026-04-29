@@ -1,0 +1,9 @@
+{
+  "audit_status": "topology_surrogate_not_brian2",
+  "claim_boundary": "Use these outputs to lock the robustness protocol. Final paper claims require the full Brian2/Brian2-equivalent runner.",
+  "max_configs": 384,
+  "n_clean_rows": 3456,
+  "n_family_configs": 20,
+  "n_noise_rows": 18200,
+  "seed_count": 5
+}

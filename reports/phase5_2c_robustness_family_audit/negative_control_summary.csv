@@ -1,0 +1,58 @@
+noise_condition,case_id,mean_false_alarm_per_min,max_false_alarm_per_min,transient_claim_rate,interpretation
+clean,no_burst,0.0,0.0,0.0,Strict negative control.
+clean,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+clean,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+input_gaussian_0p02,no_burst,0.0,0.0,0.0,Strict negative control.
+input_gaussian_0p02,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+input_gaussian_0p02,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+input_gaussian_0p05,no_burst,0.0,0.0,0.0,Strict negative control.
+input_gaussian_0p05,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+input_gaussian_0p05,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+input_gaussian_0p10,no_burst,0.0,0.0,0.0,Strict negative control.
+input_gaussian_0p10,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+input_gaussian_0p10,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+gain_noise_0p05,no_burst,0.0,0.0,0.0,Strict negative control.
+gain_noise_0p05,power_shift_no_burst,0.42857142857142855,42.857142857142854,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+gain_noise_0p05,sustained_only,0.0,0.0,0.99,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+slow_drift_0p10,no_burst,0.0,0.0,0.0,Strict negative control.
+slow_drift_0p10,power_shift_no_burst,2.142857142857143,42.857142857142854,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+slow_drift_0p10,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+colored_1f_0p05,no_burst,0.0,0.0,0.0,Strict negative control.
+colored_1f_0p05,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+colored_1f_0p05,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+line_50hz_0p05,no_burst,0.0,0.0,0.0,Strict negative control.
+line_50hz_0p05,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+line_50hz_0p05,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+event_jitter_5ms,no_burst,0.0,0.0,0.0,Strict negative control.
+event_jitter_5ms,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+event_jitter_5ms,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+event_dropout_0p10,no_burst,0.0,0.0,0.0,Strict negative control.
+event_dropout_0p10,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+event_dropout_0p10,sustained_only,0.0,0.0,0.9,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+false_spikes_0p02,no_burst,0.0,0.0,0.0,Strict negative control.
+false_spikes_0p02,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+false_spikes_0p02,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+impulse_artifact_0p25,no_burst,0.0,0.0,0.0,Strict negative control.
+impulse_artifact_0p25,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+impulse_artifact_0p25,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+clipping_0p75,no_burst,0.0,0.0,0.0,Strict negative control.
+clipping_0p75,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+clipping_0p75,sustained_only,0.0,0.0,0.55,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+mismatch_0p05,no_burst,0.0,0.0,0.0,Strict negative control.
+mismatch_0p05,power_shift_no_burst,0.8571428571428571,42.857142857142854,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+mismatch_0p05,sustained_only,0.0,0.0,0.98,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+mismatch_0p10,no_burst,0.0,0.0,0.0,Strict negative control.
+mismatch_0p10,power_shift_no_burst,0.8571428571428571,42.857142857142854,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+mismatch_0p10,sustained_only,0.0,0.0,0.97,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+mismatch_0p20,no_burst,0.0,0.0,0.0,Strict negative control.
+mismatch_0p20,power_shift_no_burst,1.7142857142857142,42.857142857142854,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+mismatch_0p20,sustained_only,0.0,0.0,0.91,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+quant_8bit,no_burst,0.0,0.0,0.0,Strict negative control.
+quant_8bit,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+quant_8bit,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+quant_6bit,no_burst,0.0,0.0,0.0,Strict negative control.
+quant_6bit,power_shift_no_burst,0.0,0.0,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+quant_6bit,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
+quant_4bit,no_burst,0.0,0.0,0.0,Strict negative control.
+quant_4bit,power_shift_no_burst,2.142857142857143,42.857142857142854,0.0,Power-shift control for Langford-Wilson style false transient-burst detections.
+quant_4bit,sustained_only,0.0,0.0,1.0,"May support sustained beta-state tracking, but must not be claimed as transient onset detection."
