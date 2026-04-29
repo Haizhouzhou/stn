@@ -18,6 +18,9 @@ dependencies = [
 
 [project.optional-dependencies]
 bursts = ["specparam", "fooof", "seaborn", "pyarrow"]
+phase4 = ["matplotlib", "seaborn", "pyarrow", "PyYAML"]
+phase4-cpu = ["brian2"]
+phase4-gpu = ["brian2cuda"]
 snn    = ["torch", "rockpool"]
 dev    = ["pytest", "pytest-cov", "ruff"]
 

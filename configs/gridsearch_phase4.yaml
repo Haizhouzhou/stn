@@ -1,0 +1,41 @@
+backend: cuda_standalone
+synthetic:
+  encoder_gain:
+    - 1.0
+    - 1.2
+  input_weight:
+    - 0.45
+    - 0.60
+  forward_weight:
+    - 1.0
+    - 1.3
+  quiet_threshold:
+    - 0.70
+    - 0.80
+  readout_bucket_index:
+    - 1
+    - 2
+  bucket_threshold_scale:
+    - 0.010
+    - 0.012
+real:
+  rectify_gain:
+    - 1.5
+    - 2.0
+  rectify_power:
+    - 1.25
+  rectify_smooth_hz:
+    - 20.0
+    - 25.0
+  encoder_gain:
+    - 1.0
+  encoder_threshold:
+    - 1.0
+    - 1.1
+  encoder_refractory_ms:
+    - 4.0
+rebuild_axes:
+  dt_ms:
+    - 1.0
+  synaptic_delay_ms:
+    - 0.0

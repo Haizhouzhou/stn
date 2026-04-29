@@ -1,0 +1,25 @@
+backend: cuda_standalone
+synthetic_end_to_end:
+  input_weight: [0.95, 1.00]
+  feedforward_tau_syn_ms: [20.0]
+  reset_tau_syn_ms: [50.0]
+  mismatch_cov_pct: [0.0]
+  cluster_exc_size: [32]
+  evidence_aggregation_mode: [top2_mean]
+  readout_threshold_state: [D2]
+  readout_dwell_ms: [80.0, 120.0]
+  occupancy_active_threshold: [0.04]
+  quiet_holdoff_ms: [100.0]
+real_dev:
+  input_weight: [0.95, 1.00]
+  feedforward_tau_syn_ms: [20.0]
+  reset_tau_syn_ms: [50.0]
+  mismatch_cov_pct: [0.0]
+  cluster_exc_size: [32]
+  evidence_aggregation_mode: [top2_mean]
+  readout_threshold_state: [D2]
+  readout_dwell_ms: [80.0, 120.0]
+  occupancy_active_threshold: [0.04]
+  quiet_holdoff_ms: [100.0]
+rebuild_axes:
+  dt_ms: [1.0]

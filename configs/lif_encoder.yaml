@@ -1,0 +1,17 @@
+lif:
+  dt_ms: 1.0
+  tau_ms: 15.0
+  refractory_ms: 4.0
+  threshold: 1.0
+  reset: 0.0
+  bias: 0.0
+  gain: 1.0
+rectify_amplify:
+  gain: 2.0
+  offset: 0.0
+  power: 1.25
+  normalize_percentile: 95.0
+  clip_max: 4.0
+  smooth_hz: 25.0
+  smooth_order: 2
+  epsilon: 1.0e-9

@@ -1,0 +1,26 @@
+order: 4
+bands:
+  - name: boundary_low
+    fmin_hz: 9.0
+    fmax_hz: 13.0
+    role: boundary
+  - name: beta_1
+    fmin_hz: 13.0
+    fmax_hz: 17.25
+    role: beta
+  - name: beta_2
+    fmin_hz: 17.25
+    fmax_hz: 21.5
+    role: beta
+  - name: beta_3
+    fmin_hz: 21.5
+    fmax_hz: 25.75
+    role: beta
+  - name: beta_4
+    fmin_hz: 25.75
+    fmax_hz: 30.0
+    role: beta
+  - name: boundary_high
+    fmin_hz: 30.0
+    fmax_hz: 40.0
+    role: boundary

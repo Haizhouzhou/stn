@@ -1,0 +1,63 @@
+base:
+  sfreq_hz: 1000.0
+  duration_s: 6.0
+  noise_std: 0.18
+  drift_std: 0.05
+  pink_noise_std: 0.10
+cases:
+  - name: short_subthreshold
+    seed: 101
+    bursts:
+      - onset_s: 1.0
+        duration_s: 0.08
+        amplitude: 0.7
+        center_hz: 20.0
+  - name: monotonic_medium
+    seed: 102
+    bursts:
+      - onset_s: 1.0
+        duration_s: 0.24
+        amplitude: 1.2
+        center_hz: 20.0
+  - name: long_pathological
+    seed: 103
+    bursts:
+      - onset_s: 0.8
+        duration_s: 0.90
+        amplitude: 1.3
+        center_hz: 18.5
+  - name: multiple_bursts
+    seed: 104
+    bursts:
+      - onset_s: 0.7
+        duration_s: 0.18
+        amplitude: 1.1
+        center_hz: 18.0
+      - onset_s: 2.2
+        duration_s: 0.42
+        amplitude: 1.15
+        center_hz: 21.0
+      - onset_s: 4.0
+        duration_s: 0.16
+        amplitude: 1.0
+        center_hz: 24.0
+  - name: interruption_robustness
+    seed: 105
+    bursts:
+      - onset_s: 1.2
+        duration_s: 0.42
+        amplitude: 1.3
+        center_hz: 20.0
+        interruption_offset_s: 0.18
+        interruption_s: 0.02
+  - name: beta_frequency_drift
+    seed: 106
+    bursts:
+      - onset_s: 1.5
+        duration_s: 0.40
+        amplitude: 1.25
+        center_hz: 17.0
+        freq_drift_hz: 8.0
+  - name: negative_control
+    seed: 107
+    bursts: []

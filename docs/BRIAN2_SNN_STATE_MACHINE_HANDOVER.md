@@ -4,6 +4,9 @@ This handover is for a Codex agent or engineer porting the legacy Brian2/Brian2C
 state-machine implementation into a new repository. It explains what exists in this
 repository, what each component does, and the safest order for rebuilding it elsewhere.
 
+For a shorter teammate quick-start focused only on the status-machine simulation files,
+see `docs/BRIAN2_STATUS_MACHINE_TEAM_HANDOFF.md`.
+
 This is a porting guide, not a performance claim. The legacy hand-designed onset-alarm
 path did not pass the original low-false-positive event-scoring gate and must remain
 documented as negative evidence. The Brian2 state machine is still useful as an

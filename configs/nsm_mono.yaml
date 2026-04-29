@@ -1,0 +1,84 @@
+bucket_thresholds_ms:
+  - 100.0
+  - 200.0
+  - 350.0
+  - 500.0
+encoder:
+  tau_ms: 15.0
+  threshold: 1.0
+  reset: 0.0
+  refractory_ms: 4.0
+  gain: 1.0
+  bias: 0.0
+quiet:
+  tau_ms: 25.0
+  threshold: 0.70
+  gain: 1.0
+  refractory_ms: 8.0
+state_machine:
+  dt_ms: 1.0
+  bucket_tau_ms: 45.0
+  bucket_threshold_scale: 0.01
+  input_weight: 0.40
+  forward_weight: 0.90
+  sustain_weight: 0.15
+  reset_weight: 2.5
+  boundary_inhibition_weight: 0.10
+  readout_bucket_index: 2
+  readout_weight: 1.2
+  synaptic_delay_ms: 0.0
+phase5:
+  states:
+    names: [D_idle, D0, D1, D2, D3, D4]
+    lower_bounds_ms: [0.0, 0.0, 50.0, 100.0, 200.0, 400.0]
+    upper_bounds_ms: [null, 50.0, 100.0, 200.0, 400.0, null]
+    threshold_scales: [0.80, 1.00, 1.18, 1.55, 2.00, 2.60]
+  cluster:
+    excitatory_size: 32
+    inhibitory_ratio: 0.25
+  encoder:
+    tau_ms: 15.0
+    threshold: 1.0
+    reset: 0.0
+    refractory_ms: 4.0
+    gain: 1.0
+    bias: 0.0
+  quiet:
+    tau_ms: 25.0
+    threshold: 0.60
+    gain: 1.0
+    refractory_ms: 12.0
+    holdoff_ms: 25.0
+  topology:
+    dt_ms: 1.0
+    neuron_tau_ms: 12.0
+    inhibitory_tau_ms: 8.0
+    refractory_ms: 5.0
+    threshold_base: 1.0
+    reset_level: 0.0
+    input_tau_syn_ms: 20.0
+    feedforward_tau_syn_ms: 20.0
+    recurrent_tau_syn_ms: 20.0
+    inhibitory_tau_syn_ms: 15.0
+    reset_tau_syn_ms: 50.0
+    input_weight: 0.70
+    recurrent_weight: 0.050
+    idle_recurrent_weight: 0.020
+    feedforward_weight: 0.120
+    local_ei_weight: 0.080
+    local_ie_weight: 0.060
+    lateral_inhibition_weight: 0.060
+    reset_weight: 0.220
+    idle_bias: 0.020
+    mismatch_cov_pct: 0.0
+  readout:
+    threshold_state: D2
+    dwell_ms: 10.0
+    tau_syn_ms: 20.0
+    weight: 0.060
+    threshold: 0.35
+    refractory_ms: 10.0
+  analysis:
+    occupancy_tau_ms: 20.0
+    occupancy_active_threshold: 0.020
+    evidence_aggregation_mode: raw
