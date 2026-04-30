@@ -59,10 +59,16 @@ beta-burst detector claim. The user explicitly referenced the `$autoresearch` sk
   `PYTHONPATH=src .../python3 - <<'PY' ... direct robustness-family tests ... PY`
 - Ran default local audit:
   `PYTHONPATH=src .../python3 scripts/05_2c_robustness_family_audit.py --out-dir reports/phase5_2c_robustness_family_audit --family-size 20 --noise-seeds 5 --max-configs 384`
+- User-ran formal pytest after creating/using local virtual environment `.venvNI`:
+  `PYTHONPATH=src python -m pytest tests/test_phase5_2c_robustness_family_audit.py -q`
+  and
+  `PYTHONPATH=src python -m pytest tests/test_phase5_2c_robustness_family_audit.py -v`
 
 ## Validation Results
 
 - Direct robustness-family tests passed.
+- User-ran formal pytest passed: `5 passed in 22.54s` with `-q`, and `5 passed in 4.44s`
+  with `-v` under `.venvNI` using Python 3.14.3 / pytest 9.0.3.
 - Syntax compilation passed.
 - Default audit completed and wrote `reports/phase5_2c_robustness_family_audit`.
 - Report manifest:
@@ -89,8 +95,9 @@ beta-burst detector claim. The user explicitly referenced the `$autoresearch` sk
   deterministic topology surrogate and output-contract harness.
 - Final paper claims require rerunning this protocol in the teammate/cluster checkout
   that contains `src/stnbeta/snn_brian2/...`.
-- The bundled local Python lacks pytest, so pytest execution was not available locally;
-  direct function-level smoke tests were used instead.
+- Codex's bundled local Python lacked pytest, so direct function-level smoke tests were
+  used during implementation. The user subsequently installed pytest in `.venvNI` and
+  confirmed the formal pytest suite passes.
 
 ## Final Codex Output Draft
 
@@ -98,10 +105,9 @@ Implemented the robustness-family audit as a local topology-surrogate harness, w
 clear claim boundary that it is not a Brian2/DYNAP-SE1 result yet. Added protocol docs,
 CLI, tests, and generated report tables under `reports/phase5_2c_robustness_family_audit`.
 
-Validation: direct robustness-family tests passed; syntax compilation passed; default
-audit generated 3,456 clean rows, selected 20 family configs, and evaluated 18,200
-noise/mismatch rows. Pytest could not be run because this local bundled Python does not
-include pytest.
+Validation: direct robustness-family tests passed; user-ran formal pytest passed
+(`5 passed`); syntax compilation passed; default audit generated 3,456 clean rows,
+selected 20 family configs, and evaluated 18,200 noise/mismatch rows.
 
 ## Commit After Task
 
